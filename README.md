@@ -1,73 +1,104 @@
-# React + TypeScript + Vite
+# Adhara´s Beauty - Algoritmos 2025
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Adhara´s Beauty** es un ecommerce enfocado en el maquillaje y la belleza personalizada. Aquí puedes:
 
-Currently, two official plugins are available:
+- Descubrir los best sellers y productos en tendencia alrededor del mundo.
+- Encontrar tu match perfecto: tonos y maquillajes que se adaptan a ti.
+- Ser miembro de la comunidad y acceder a beneficios exclusivos.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Nuestro objetivo es crear un espacio donde la belleza sea inclusiva, accesible y personalizada para cada persona.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🧠 Estructura del Proyecto (Scaffolding)
 
-## Expanding the ESLint configuration
+```bash
+Adharas-beauty/
+├── dist/                        # Archivos de distribución
+├── node_modules/                # Dependencias del proyecto
+├── public/                      # Archivos públicos como imágenes
+├── public/                     
+│   ├── index.html              # HTML principal
+│   ├── images/                 # Imágenes estáticas
+│   └── icons/                  # Íconos (favicon, logos, etc.)
+│
+├── src/
+│   ├── assets/                 # Recursos (fuentes, imágenes locales)
+│   ├── components/             # Componentes UI reutilizables
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── ProductCard.tsx
+│   │   ├── ProductFilter.tsx
+│   │   ├── ProductCarousel.tsx
+│   │   ├── Banner.tsx
+│   │   ├── MembershipCard.tsx
+│   │   ├── LoginForm.tsx
+│   │   └── SignupForm.tsx
+│   │
+│   ├── layouts/                # Layouts principales
+│   │   ├── MainLayout.ts
+│   │   └── AuthLayout.ts
+│   │
+│   ├── pages/                  # Vistas del e-commerce
+│   │   ├── Home.tsx
+│   │   ├── Category.tsx        # (ej: lips, skincare, etc.)
+│   │   ├── ProductDetail.tsx
+│   │   ├── Cart.tsx
+│   │   ├── Membership.tsx
+│   │   ├── Login.tsx
+│   │   └── Signup.tsx
+│   │
+│   ├── services/               # Conexión a API o datos fake
+│   │   ├── ProductService.tsx
+│   │   └── AuthService.tsx
+│   │
+│   ├── store/                  # Estado global (ej: carrito, usuario)
+│   │   ├── cartSlice.tsx
+│   │   ├── userSlice.tsx
+│   │   └── index.tsx
+│   │
+│   ├── styles/                 # Estilos globales o módulos CSS
+│   │   └── globals.css
+│   │
+│   ├── utils/                  # Funciones helper
+│   │   └── formatPrice.tsx      # Calcular descuentos y membresías
+│   │   ├── applyDiscount.tsx    # Funciones para manejar carrito (subtotal, total, etc.)
+│   │   ├── cartHelpers.tsx       # Validar emails en registro/login   
+│   │   └── validateEmail.tsx       
+│   └── types/                  # Definiciones de tipos TS
+│       ├── product.tsx
+│       └── user.tsx
+│
+├── .gitignore
+├── eslint.config.js
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+✍️ Convención de Commits
+Para mantener un historial limpio y coherente, seguimos la siguiente convención de nombres de commits:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Tipo	Descripción
+Fix	Corrección de errores
+FEAT	Nuevas características o funcionalidades
+STYLE	Cambios de formato que no afectan la lógica del código
+REFACTOR	Cambios en la estructura del código sin corregir errores
+TEST	Modificaciones o agregados en pruebas
+CHORE	Tareas de mantenimiento o configuración del proyecto
+breaking	Cambios que rompen compatibilidad con versiones anteriores
+DOCS	Cambios en la documentación
+CREATE COMPONENT	Creación de un nuevo componente
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+🚀 Tecnologías Usadas
+TypeScript
+REACT
+HTML / CSS
+TAILWIND
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Web Components
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Eslint
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Firebase (por definir si aplica)
