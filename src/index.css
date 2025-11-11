@@ -7,3 +7,5 @@
 
 :root { color-scheme: dark; }
 body { @apply bg-adhara-black text-white; }
+
+.link-adhara { @apply text-adhara-pink hover:underline underline-offset-4; }
