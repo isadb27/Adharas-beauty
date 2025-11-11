@@ -9,10 +9,10 @@ export type Product = {
 
 export const PRODUCTS: Product[] = [
   {
-    id: "1",
+    id: "t-001",
     name: "Trendy Chocolate eyeshadows 1unit",
-    price: 30.0,
-    image: "/img/trendy-chocolate.png", // guarda tu imagen en /public/img/
+    price: 30,
+    image: "/trendy-chocolate.png", // usa el nombre real de la imagen en /public
     bestSeller: true,
     rating: 5,
   },

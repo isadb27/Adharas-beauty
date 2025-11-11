@@ -1,70 +1,200 @@
+import { useEffect, useMemo, useState } from "react";
 import type { Product } from "../data/products";
 
-function Star({ filled = true }: { filled?: boolean }) {
+/* ---------- Helpers wishlist (localStorage) ---------- */
+const LS_KEY = "adharas:wishlist";
+function readWishlist(): Record<string, true> {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? (JSON.parse(raw) as Record<string, true>) : {};
+  } catch {
+    return {};
+  }
+}
+function writeWishlist(map: Record<string, true>) {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(map));
+  } catch {}
+}
+
+/* ---------- Star (rating) ---------- */
+function Star({
+  filled,
+  onEnter,
+  onLeave,
+  onClick,
+}: {
+  filled: boolean;
+  onEnter: () => void;
+  onLeave: () => void;
+  onClick: () => void;
+}) {
   return (
-    <svg viewBox="0 0 20 20" className="h-4 w-4" aria-hidden="true">
-      <path
-        d="M10 1.6l2.47 5.01 5.53.8-4 3.9.95 5.52L10 14.92 5.05 16.83l.95-5.52-4-3.9 5.53-.8L10 1.6z"
-        fill={filled ? "#fff" : "none"}
-        stroke="#fff"
-        strokeWidth="1"
-      />
+    <button
+      type="button"
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      onClick={onClick}
+      aria-label="Calificar"
+      className="transition-transform hover:scale-110"
+    >
+      <svg
+        viewBox="0 0 20 20"
+        className="h-5 w-5 text-white"
+        fill={filled ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="1.2"
+        aria-hidden="true"
+      >
+        <path d="M10 1.6l2.47 5.01 5.53.8-4 3.9.95 5.52L10 14.92 5.05 16.83l.95-5.52-4-3.9 5.53-.8L10 1.6z" />
+      </svg>
+    </button>
+  );
+}
+
+/* ---------- Heart (wishlist) ---------- */
+function Heart({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-6 w-6"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+    >
+      <path d="M12.1 20.3l-1.1-1C6.1 15 3 12.2 3 8.8 3 6.2 5.1 4 7.8 4c1.4 0 2.8.6 3.7 1.7C12.4 4.6 13.8 4 15.2 4 17.9 4 20 6.2 20 8.8c0 3.4-3.1 6.2-8 10.5l-1.1 1z" />
     </svg>
   );
 }
 
-export default function ProductCard({ p }: { p: Product }) {
+export default function ProductCard({
+  p,
+  onQuickAdd,
+  onToggleFav,
+}: {
+  p: Product;
+  onQuickAdd?: (id: string, qty: number) => void;
+  onToggleFav?: (id: string, fav: boolean) => void;
+}) {
+  /* ⭐ rating interactivo */
+  const [rating, setRating] = useState<number>(p.rating ?? 0);
+  const [hover, setHover] = useState<number | null>(null);
+  const display = useMemo(() => hover ?? rating, [hover, rating]);
+
+  /* 🛒 quick add */
+  const [qty, setQty] = useState(0);
+  const inc = () => {
+    const v = qty + 1;
+    setQty(v);
+    onQuickAdd?.(p.id, v);
+  };
+  const dec = () => setQty((v) => Math.max(0, v - 1));
+
+  /* 💖 wishlist (persistente) */
+  const [isFav, setIsFav] = useState(false);
+  useEffect(() => {
+    const map = readWishlist();
+    setIsFav(Boolean(map[p.id]));
+  }, [p.id]);
+
+  const toggleFav = () => {
+    setIsFav((prev) => {
+      const next = !prev;
+      const map = readWishlist();
+      if (next) map[p.id] = true;
+      else delete map[p.id];
+      writeWishlist(map);
+      onToggleFav?.(p.id, next);
+      return next;
+    });
+  };
+
   return (
-    <article className="w-[250px] text-center text-white font-[Oswald] relative">
-      {/* Imagen */}
-      <div className="relative overflow-hidden rounded-xl">
+    <article className="w-[220px] text-left text-white font-[Oswald]">
+      {/* Imagen + overlay */}
+      <div className="group relative overflow-hidden rounded-xl">
         <img
-          src={p.image || "https://placehold.co/600x450/png"}
+          src={p.image || "/trendy-chocolate.png"} /* en /public */
           alt={p.name}
-          className="h-[230px] w-full object-cover"
-          loading="lazy"
+          className="h-[230px] w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
-        {/* Sello BEST SELLER */}
+        {/* BEST SELLER */}
         {p.bestSeller && (
-          <div className="absolute left-0 top-0">
-            <img
-              src="https://i.ibb.co/PhfQYt1/best-seller.png" // puedes cambiarlo por tu PNG transparente
-              alt="Best Seller"
-              className="w-[90px]"
-            />
-          </div>
+          <img
+            src="/best-seller.png"
+            alt="Best Seller"
+            className="absolute right-[-6px] top-[-6px] w-[95px] rotate-12"
+          />
         )}
+
+        {/* Overlay QUICK ADD */}
+        <div className="pointer-events-none absolute inset-0 hidden items-end justify-center group-hover:flex">
+          <div className="pointer-events-auto mb-3 flex items-center gap-3 rounded-md bg-black/55 px-4 py-2">
+            <button
+              type="button"
+              onClick={dec}
+              className="grid h-7 w-7 place-items-center rounded-sm border border-white/30 text-lg"
+            >
+              –
+            </button>
+            <button
+              type="button"
+              onClick={inc}
+              className="rounded-sm bg-white/15 px-3 py-1 text-sm font-extrabold tracking-wide"
+            >
+              {qty > 0 ? `QUICK ADD (${qty})` : "QUICK ADD"}
+            </button>
+            <button
+              type="button"
+              onClick={inc}
+              className="grid h-7 w-7 place-items-center rounded-sm border border-white/30 text-lg"
+            >
+              +
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Nombre */}
-      <h3 className="mt-3 text-sm font-semibold uppercase tracking-wide">
+      <h3 className="mt-3 text-[15px] font-semibold uppercase leading-tight tracking-wide">
         {p.name}
       </h3>
 
-      {/* Rating + Corazón */}
-      <div className="mt-2 flex items-center justify-center gap-2">
+      {/* Rating + corazón (wishlist) */}
+      <div className="mt-2 flex items-center justify-start gap-3">
         <div className="flex gap-1">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} filled={i < (p.rating ?? 0)} />
-          ))}
+          {Array.from({ length: 5 }).map((_, i) => {
+            const idx = i + 1;
+            return (
+              <Star
+                key={i}
+                filled={idx <= display}
+                onEnter={() => setHover(idx)}
+                onLeave={() => setHover(null)}
+                onClick={() => setRating(idx)}
+              />
+            );
+          })}
         </div>
-        {/* Corazón */}
-        <button type="button" aria-label="Agregar a favoritos" className="ml-2">
-          <svg
-            viewBox="0 0 24 24"
-            className="h-6 w-6"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="1.5"
-          >
-            <path d="M12.1 20.3l-1.1-1C6.1 15 3 12.2 3 8.8 3 6.2 5.1 4 7.8 4c1.4 0 2.8.6 3.7 1.7C12.4 4.6 13.8 4 15.2 4 17.9 4 20 6.2 20 8.8c0 3.4-3.1 6.2-8 10.5l-1.1 1z" />
-          </svg>
+
+        <button
+          type="button"
+          aria-label={isFav ? "Quitar de favoritos" : "Agregar a favoritos"}
+          aria-pressed={isFav}
+          onClick={toggleFav}
+          className={`transition active:scale-95 ${isFav ? "text-adhara-pink" : ""}`}
+          title={isFav ? "En tu wishlist" : "Añadir a wishlist"}
+        >
+          <Heart filled={isFav} />
         </button>
       </div>
 
       {/* Precio */}
-      <p className="mt-2 text-[#ED5A87] text-lg font-bold">${p.price.toFixed(2)}</p>
+      <p className="mt-2 text-adhara-pink text-lg font-bold">
+        ${p.price.toFixed(2)}
+      </p>
     </article>
   );
 }
