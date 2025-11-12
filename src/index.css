@@ -1,16 +1,17 @@
 @import "tailwindcss";
 
-/* Tailwind v4: @theme crea utilidades (bg-adhara-black, text-adhara-pink, etc.) */
+/* Tailwind v4: @theme crea utilidades personalizadas (bg-adhara-black, text-adhara-pink, etc.) */
 @theme {
   --color-adhara-pink: #ED5A87;
   --color-adhara-black: #0B0B0C;
 }
 
 /* Ajustes globales */
-:root { color-scheme: dark; }
+:root {
+  color-scheme: dark;
+}
 
 body {
-  /* Sí, @apply funciona en v4 */
   @apply bg-adhara-black text-white;
 }
 
