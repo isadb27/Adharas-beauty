@@ -1,16 +1,25 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Search, Heart, ShoppingBag, User } from "lucide-react";
 import logofndonegro1 from "../assets/logofndonegro1.png"; 
 
 export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
-  const [active, setActive] = useState("Lips");
+  const location = useLocation();
 
-  const menuItems = ["Eyes", "Brows", "Face", "Lips", "Skincare", "Hair"];
+  // Definimos tus secciones de navegación con sus rutas
+  const menuItems = [
+    { name: "Eyes", path: "/eyes" },
+    { name: "Brows", path: "/brows" },
+    { name: "Face", path: "/face" },
+    { name: "Lips", path: "/lips" },
+    { name: "Skincare", path: "/skincare" },
+    { name: "Hair", path: "/hair" },
+  ];
 
   return (
     <nav className="w-full text-white font-sans">
-
+      {/* Franja superior */}
       <div className="bg-[#150010] text-sm text-center py-1">
         Hurry! Discounts You Don’t Want to Miss{" "}
         <span className="text-pink-400 underline cursor-pointer">
@@ -18,8 +27,8 @@ export default function Navbar() {
         </span>
       </div>
 
+      {/* Logo y botones principales */}
       <div className="bg-black flex justify-between items-center px-6 py-3 border-b border-gray-800">
-
         <div className="text-sm text-gray-300">
           United States | English
         </div>
@@ -33,7 +42,6 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center space-x-5">
-
           <button
             onClick={() => setShowSearch(!showSearch)}
             className="hover:text-pink-400 transition"
@@ -49,12 +57,16 @@ export default function Navbar() {
             <ShoppingBag size={20} />
           </button>
 
-          <button className="flex items-center hover:text-pink-400 transition text-sm">
+          <Link
+            to="/"
+            className="flex items-center hover:text-pink-400 transition text-sm"
+          >
             <User size={18} className="mr-1" /> Sign in
-          </button>
+          </Link>
         </div>
       </div>
 
+      {/* Barra de búsqueda */}
       {showSearch && (
         <div className="bg-black px-6 py-3 border-b border-gray-800 animate-fadeIn">
           <input
@@ -65,20 +77,23 @@ export default function Navbar() {
         </div>
       )}
 
+      {/* Menú de navegación */}
       <div className="bg-black flex justify-center space-x-10 py-2 border-b border-gray-800 relative">
         {menuItems.map((item) => (
-          <button
-            key={item}
-            onClick={() => setActive(item)}
+          <Link
+            key={item.path}
+            to={item.path}
             className={`relative pb-1 transition ${
-              active === item ? "text-pink-400" : "text-white"
-            } hover:text-pink-400`}
+              location.pathname === item.path
+                ? "text-pink-400"
+                : "text-white hover:text-pink-400"
+            }`}
           >
-            {item}
-            {active === item && (
-              <span className="absolute bottom-0 left-0 w-full h-[3px] bg-lineal-to-r from-blue-400 to-blue-600 rounded-full"></span>
+            {item.name}
+            {location.pathname === item.path && (
+              <span className="absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-r from-pink-400 to-purple-500 rounded-full"></span>
             )}
-          </button>
+          </Link>
         ))}
       </div>
     </nav>

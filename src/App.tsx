@@ -10,6 +10,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Lips from "./pages/lips";
+import Brows from "./pages/brows";
+
 import "./App.css";
 
 export default function App() {
@@ -27,13 +29,14 @@ export default function App() {
             {/* SHOP */}
             <Route path="/products" element={<Products />} />
             <Route path="/lips" element={<Lips />} />
+            <Route path="/brows" element={<Brows />} />
             <Route path="/product/:slug" element={<ProductDetail />} />
 
             {/* ADMIN */}
             <Route path="/add-product" element={<AddProduct />} />
 
             {/* FALLBACK */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/lips" replace />} />
           </Routes>
         </main>
         <Footer />
