@@ -6,6 +6,7 @@ export default function AddProduct() {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [details, setDetails] = useState("");
+  const [image, setImage] = useState<string | null>(null); // para nuevo estado para la imagen
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,7 +16,7 @@ export default function AddProduct() {
       return;
     }
 
-    const newProduct = { productName, price, details };
+    const newProduct = { productName, price, details, image };
     const existingProducts = JSON.parse(localStorage.getItem("products") || "[]");
 
     localStorage.setItem("products", JSON.stringify([...existingProducts, newProduct]));
@@ -24,6 +25,16 @@ export default function AddProduct() {
     setProductName("");
     setPrice("");
     setDetails("");
+    setImage(null);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImage(reader.result as string);
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -31,8 +42,35 @@ export default function AddProduct() {
       {/* Contenedor principal */}
       <div className="flex flex-col md:flex-row flex-grow">
         {/* Imagen del lado izquierdo */}
-        <div className="md:w-1/2 flex items-center justify-center bg-pink-300">
-          <span className="text-pink-200 text-[200px] md:text-[250px] font-thin">+</span>
+        <div className="md:w-1/2 flex items-center justify-center bg-pink-300 relative">
+          {image ? (
+            <>
+              <img
+                src={image}
+                alt="Product"
+                className="h-full w-full object-cover"
+              />
+              <label className="absolute top-4 right-4 bg-white text-gray-700 text-sm py-1 px-3 rounded-full cursor-pointer shadow-md hover:bg-gray-100 transition">
+                Cambiar
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </label>
+            </>
+          ) : (
+            <label className="text-pink-200 text-[200px] md:text-[250px] font-thin cursor-pointer">
+              +
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+            </label>
+          )}
         </div>
 
         {/* Formulario del lado derecho */}
@@ -89,6 +127,7 @@ export default function AddProduct() {
                   setProductName("");
                   setPrice("");
                   setDetails("");
+                  setImage(null);
                 }}
                 className="bg-pink-500 text-white py-2 px-6 rounded-md hover:bg-pink-600 transition-colors"
               >
