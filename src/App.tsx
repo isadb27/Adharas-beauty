@@ -12,7 +12,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Lips from "./pages/lips";
 import Brows from "./pages/brows";
 import Eyes from "./pages/eyes";
-import Face from "./pages/face"; // ✅ corregido
+import Face from "./pages/face"; 
+import Hair from "./pages/hair";
+
 
 import "./App.css";
 
@@ -31,6 +33,7 @@ export default function App() {
             <Route path="/eyes" element={<Eyes key="eyes" />} />
             <Route path="/brows" element={<Brows key="brows" />} />
             <Route path="/face" element={<Face key="face" />} />
+            <Route path="/hair" element={<Hair key="hair" />} />
 
             <Route path="/add-product" element={<AddProduct />} />
 

@@ -1,4 +1,6 @@
-export const hairProducts = [
+import type { Product } from "./products";
+
+export const hairProducts: Product[] = [
   {
     id: 1,
     name: "Bow + scrunchies set",
