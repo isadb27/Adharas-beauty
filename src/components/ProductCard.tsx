@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 import type { Product } from "../data/products";
 
 /* ---------- Helpers wishlist (localStorage) ---------- */
@@ -27,7 +29,7 @@ function Star({
   filled: boolean;
   onEnter: () => void;
   onLeave: () => void;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
 }) {
   return (
     <button
@@ -68,15 +70,16 @@ function Heart({ filled }: { filled: boolean }) {
   );
 }
 
+/* ---------- ProductCard ---------- */
 export default function ProductCard({
   p,
-  onQuickAdd,
   onToggleFav,
 }: {
   p: Product;
-  onQuickAdd?: (id: string, qty: number) => void;
   onToggleFav?: (id: string, fav: boolean) => void;
 }) {
+  const { addToCart } = useCart();
+
   /* ⭐ rating interactivo */
   const [rating, setRating] = useState<number>(p.rating ?? 0);
   const [hover, setHover] = useState<number | null>(null);
@@ -84,21 +87,36 @@ export default function ProductCard({
 
   /* 🛒 quick add */
   const [qty, setQty] = useState(0);
-  const inc = () => {
+  const inc = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     const v = qty + 1;
     setQty(v);
-    onQuickAdd?.(p.id, v);
+    addToCart({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      image: p.image,
+      quantity: 1,
+    });
   };
-  const dec = () => setQty((v) => Math.max(0, v - 1));
+  const dec = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setQty((v) => Math.max(0, v - 1));
+  };
 
   /* 💖 wishlist (persistente) */
   const [isFav, setIsFav] = useState(false);
   useEffect(() => {
     const map = readWishlist();
     setIsFav(Boolean(map[p.id]));
+    setQty(0);
   }, [p.id]);
 
-  const toggleFav = () => {
+  const toggleFav = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     setIsFav((prev) => {
       const next = !prev;
       const map = readWishlist();
@@ -114,19 +132,21 @@ export default function ProductCard({
     <article className="w-[220px] text-left text-white font-[Oswald]">
       {/* Imagen + overlay */}
       <div className="group relative overflow-hidden rounded-xl">
-        <img
-          src={p.image || "/trendy-chocolate.png"} /* en /public */
-          alt={p.name}
-          className="h-[230px] w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-
-        {/* BEST SELLER */}
-        {p.bestSeller && (
+        <Link to={`/product/${p.slug ?? p.id}`}>
           <img
-            src="/best-seller.png"
-            alt="Best Seller"
-            className="absolute right-[-6px] top-[-6px] w-[95px] rotate-12"
+            src={p.image || "/trendy-chocolate.png"}
+            alt={p.name}
+            className="h-[230px] w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
+        </Link>
+
+        {/* BEST SELLER (badge de texto, sin imagen) */}
+        {p.bestSeller && (
+          <div className="pointer-events-none absolute left-2 top-2">
+            <span className="inline-flex items-center rounded-full border border-white/90 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white/95 bg-black/10 backdrop-blur-[1px]">
+              BEST SELLER
+            </span>
+          </div>
         )}
 
         {/* Overlay QUICK ADD */}
@@ -157,12 +177,17 @@ export default function ProductCard({
         </div>
       </div>
 
-      {/* Nombre */}
+      {/* Nombre (lleva al detalle) */}
       <h3 className="mt-3 text-[15px] font-semibold uppercase leading-tight tracking-wide">
-        {p.name}
+        <Link
+          to={`/product/${p.slug ?? p.id}`}
+          className="hover:underline underline-offset-2"
+        >
+          {p.name}
+        </Link>
       </h3>
 
-      {/* Rating + corazón (wishlist) */}
+      {/* Rating + corazón */}
       <div className="mt-2 flex items-center justify-start gap-3">
         <div className="flex gap-1">
           {Array.from({ length: 5 }).map((_, i) => {
@@ -173,7 +198,11 @@ export default function ProductCard({
                 filled={idx <= display}
                 onEnter={() => setHover(idx)}
                 onLeave={() => setHover(null)}
-                onClick={() => setRating(idx)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setRating(idx);
+                }}
               />
             );
           })}
@@ -184,7 +213,9 @@ export default function ProductCard({
           aria-label={isFav ? "Quitar de favoritos" : "Agregar a favoritos"}
           aria-pressed={isFav}
           onClick={toggleFav}
-          className={`transition active:scale-95 ${isFav ? "text-adhara-pink" : ""}`}
+          className={`transition active:scale-95 ${
+            isFav ? "text-adhara-pink" : ""
+          }`}
           title={isFav ? "En tu wishlist" : "Añadir a wishlist"}
         >
           <Heart filled={isFav} />
