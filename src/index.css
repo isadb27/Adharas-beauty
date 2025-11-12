@@ -1,11 +1,20 @@
 @import "tailwindcss";
 
+/* Tailwind v4: @theme crea utilidades personalizadas (bg-adhara-black, text-adhara-pink, etc.) */
 @theme {
   --color-adhara-pink: #ED5A87;
   --color-adhara-black: #0B0B0C;
 }
 
-:root { color-scheme: dark; }
-body { @apply bg-adhara-black text-white; }
+/* Ajustes globales */
+:root {
+  color-scheme: dark;
+}
 
-.link-adhara { @apply text-adhara-pink hover:underline underline-offset-4; }
+body {
+  @apply bg-adhara-black text-white;
+}
+
+.link-adhara {
+  @apply text-adhara-pink hover:underline underline-offset-4;
+}
