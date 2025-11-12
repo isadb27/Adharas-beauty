@@ -1,13 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import AddProduct from "./pages/AddProduct";
+import Navbar from "./components/Navbar";
 
-function App() {
+export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<AddProduct />} />
-    </Routes>
+    <div className="min-h-screen bg-black">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<AddProduct />} />
+      </Routes>
+    </div>
   );
 }
-
-export default App;
