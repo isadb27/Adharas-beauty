@@ -11,6 +11,7 @@ import Signup from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Lips from "./pages/lips";
 import Brows from "./pages/brows";
+import Eyes from "./pages/eyes";
 
 import "./App.css";
 
@@ -21,18 +22,17 @@ export default function App() {
         <Navbar />
         <main className="flex-1">
           <Routes>
-            {/* AUTH */}
             <Route path="/" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            {/* SHOP */}
             <Route path="/products" element={<Products />} />
             <Route path="/lips" element={<Lips />} />
             <Route path="/brows" element={<Brows />} />
+            <Route path="/eyes" element={<Eyes />} />
             <Route path="/product/:slug" element={<ProductDetail />} />
 
-            {/* ADMIN */}
+
             <Route path="/add-product" element={<AddProduct />} />
 
             {/* FALLBACK */}

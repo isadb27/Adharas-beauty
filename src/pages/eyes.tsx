@@ -1,26 +1,31 @@
+// src/pages/eyes.tsx
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { fetchProductsByCategory } from "../api/productsApi";
 import type { Product } from "../data/products";
 
-export default function Brows() {
+export default function Eyes() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProductsByCategory("brows")
+    fetchProductsByCategory("eyes")
       .then((data) => setProducts(data))
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
-    return <div className="text-center text-white py-10">Loading brow products...</div>;
+    return (
+      <div className="text-center text-white py-10">
+        Loading eye products...
+      </div>
+    );
   }
 
   return (
     <section className="px-6 py-12">
       <h2 className="text-3xl font-bold tracking-widest uppercase mb-10 text-center text-adhara-pink">
-        Brows Collection
+        Eyes Collection
       </h2>
       <div className="flex flex-wrap justify-center gap-8">
         {products.map((p) => (

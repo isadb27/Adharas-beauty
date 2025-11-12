@@ -7,7 +7,6 @@ export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const location = useLocation();
 
-  // Definimos tus secciones de navegación con sus rutas
   const menuItems = [
     { name: "Eyes", path: "/eyes" },
     { name: "Brows", path: "/brows" },
@@ -19,7 +18,6 @@ export default function Navbar() {
 
   return (
     <nav className="w-full text-white font-sans">
-      {/* Franja superior */}
       <div className="bg-[#150010] text-sm text-center py-1">
         Hurry! Discounts You Don’t Want to Miss{" "}
         <span className="text-pink-400 underline cursor-pointer">
@@ -27,7 +25,7 @@ export default function Navbar() {
         </span>
       </div>
 
-      {/* Logo y botones principales */}
+
       <div className="bg-black flex justify-between items-center px-6 py-3 border-b border-gray-800">
         <div className="text-sm text-gray-300">
           United States | English
@@ -66,7 +64,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Barra de búsqueda */}
       {showSearch && (
         <div className="bg-black px-6 py-3 border-b border-gray-800 animate-fadeIn">
           <input
@@ -77,7 +74,6 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Menú de navegación */}
       <div className="bg-black flex justify-center space-x-10 py-2 border-b border-gray-800 relative">
         {menuItems.map((item) => (
           <Link
