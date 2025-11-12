@@ -1,83 +1,70 @@
 import React, { useState } from "react";
-import { useCart } from "../context/CartContext";
-
-interface Product {
-  id: number | string;
-  name: string;
-  price: number | string;
-  image: string;
-  description?: string; // ✅ opcional para evitar error en lips
-}
+import { FaStar, FaHeart } from "react-icons/fa";
+import { useFavorites } from "../context/FavoritesContext";
+import type { Product } from "../data/products";
 
 interface ProductCardProps {
   p: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
-  const { addToCart } = useCart();
-  const [qty, setQty] = useState(0);
-
-  const inc = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const v = qty + 1;
-    setQty(v);
-    addToCart({
-      id: String(p.id),
-      name: p.name,
-      price: Number(p.price),
-      image: p.image,
-      quantity: 1,
-    });
-  };
-
-  const dec = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    if (qty > 0) {
-      const v = qty - 1;
-      setQty(v);
-      addToCart({
-        id: String(p.id),
-        name: p.name,
-        price: Number(p.price),
-        image: p.image,
-        quantity: -1,
-      });
-    }
-  };
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const [rating, setRating] = useState<number>(0);
+  const [hover, setHover] = useState<number>(0);
 
   return (
-    <div className="bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:scale-[1.02] transition-transform cursor-pointer w-64">
-      <img
-        src={p.image}
-        alt={p.name}
-        className="w-full h-52 object-cover"
-      />
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-white">{p.name}</h3>
-        <p className="mt-1 text-sm text-gray-300">${Number(p.price).toFixed(2)}</p>
-        {p.description && (
-          <p className="text-xs text-gray-400 mt-1 line-clamp-2">{p.description}</p>
-        )}
+    <div className="bg-black border border-gray-800 rounded-2xl shadow-md overflow-hidden transition duration-300 hover:shadow-pink-500/30 hover:-translate-y-1 w-64">
+      <div className="relative">
+        <img
+          src={p.image}
+          alt={p.name}
+          className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
+        />
 
-        <div className="flex items-center justify-between mt-3">
-          <button
-            onClick={dec}
-            disabled={qty === 0}
-            className="px-3 py-1 bg-gray-700 text-white rounded-lg disabled:opacity-40"
-          >
-            -
-          </button>
+        {/* ❤️ Botón de favorito */}
+        <button
+          onClick={() => toggleFavorite(p)}
+          className="absolute top-3 right-3 text-gray-400 hover:text-pink-500 transition"
+        >
+          <FaHeart
+            size={20}
+            color={isFavorite(p.id) ? "#f472b6" : "#9ca3af"}
+            className={`transition-transform duration-200 ${
+              isFavorite(p.id) ? "scale-110" : "scale-100"
+            }`}
+          />
+        </button>
+      </div>
 
-          <span className="text-white font-medium">{qty}</span>
+      <div className="p-4 text-center">
+        <h3 className="text-white text-lg font-semibold tracking-wide mb-1">{p.name}</h3>
+        <p className="text-pink-400 text-sm font-medium mb-3">{p.price}</p>
 
-          <button
-            onClick={inc}
-            className="px-3 py-1 bg-adhara-pink text-white rounded-lg hover:bg-pink-600 transition"
-          >
-            +
-          </button>
+        {/* ⭐ Estrellas de valoración */}
+        <div className="flex justify-center gap-1">
+          {[...Array(5)].map((_, index) => {
+            const ratingValue = index + 1;
+            return (
+              <button
+                key={index}
+                type="button"
+                className="focus:outline-none"
+                onClick={() => setRating(ratingValue)}
+                onMouseEnter={() => setHover(ratingValue)}
+                onMouseLeave={() => setHover(0)}
+              >
+                <FaStar
+                  size={18}
+                  color={
+                    ratingValue <= (hover || rating)
+                      ? "#f472b6"
+                      : "#4b5563"
+                  }
+                  className="transition-colors duration-200"
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Search, Heart, ShoppingBag, User } from "lucide-react";
+import { useFavorites } from "../context/FavoritesContext";
 import logofndonegro1 from "../assets/logofndonegro1.png"; 
 
 export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const location = useLocation();
+  const { favorites } = useFavorites();
 
   const menuItems = [
     { name: "Eyes", path: "/eyes" },
@@ -24,7 +26,6 @@ export default function Navbar() {
           Get Your Code
         </span>
       </div>
-
 
       <div className="bg-black flex justify-between items-center px-6 py-3 border-b border-gray-800">
         <div className="text-sm text-gray-300">
@@ -47,9 +48,14 @@ export default function Navbar() {
             <Search size={20} />
           </button>
 
-          <button className="hover:text-pink-400 transition">
+          <Link to="/favorites" className="relative hover:text-pink-400 transition">
             <Heart size={20} />
-          </button>
+            {favorites.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                {favorites.length}
+              </span>
+            )}
+          </Link>
 
           <button className="hover:text-pink-400 transition">
             <ShoppingBag size={20} />

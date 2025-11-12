@@ -3,12 +3,12 @@ import ProductCard from "../components/ProductCard";
 import { fetchProductsByCategory } from "../api/productsApi";
 import type { Product } from "../data/products";
 
-export default function Face() {
+export default function Skincare() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProductsByCategory("face")
+    fetchProductsByCategory("skincare")
       .then((data) => setProducts(data))
       .finally(() => setLoading(false));
   }, []);
