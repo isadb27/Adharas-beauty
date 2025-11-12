@@ -1,4 +1,4 @@
-export const faceproducts = [
+export const faceProducts = [
   {
     id: 1,
     name: "translucent powder",

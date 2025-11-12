@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Product } from "../data/products";
 
-/* ---------- Helpers wishlist (localStorage) ---------- */
 const LS_KEY = "adharas:wishlist";
+
 function readWishlist(): Record<string, true> {
   try {
     const raw = localStorage.getItem(LS_KEY);
@@ -11,13 +11,13 @@ function readWishlist(): Record<string, true> {
     return {};
   }
 }
+
 function writeWishlist(map: Record<string, true>) {
   try {
     localStorage.setItem(LS_KEY, JSON.stringify(map));
   } catch {}
 }
 
-/* ---------- Star (rating) ---------- */
 function Star({
   filled,
   onEnter,
@@ -52,7 +52,6 @@ function Star({
   );
 }
 
-/* ---------- Heart (wishlist) ---------- */
 function Heart({ filled }: { filled: boolean }) {
   return (
     <svg
@@ -74,15 +73,13 @@ export default function ProductCard({
   onToggleFav,
 }: {
   p: Product;
-  onQuickAdd?: (id: string, qty: number) => void;
-  onToggleFav?: (id: string, fav: boolean) => void;
+  onQuickAdd?: (id: number, qty: number) => void;
+  onToggleFav?: (id: number, fav: boolean) => void;
 }) {
-  /* ⭐ rating interactivo */
   const [rating, setRating] = useState<number>(p.rating ?? 0);
   const [hover, setHover] = useState<number | null>(null);
   const display = useMemo(() => hover ?? rating, [hover, rating]);
 
-  /* 🛒 quick add */
   const [qty, setQty] = useState(0);
   const inc = () => {
     const v = qty + 1;
@@ -91,19 +88,18 @@ export default function ProductCard({
   };
   const dec = () => setQty((v) => Math.max(0, v - 1));
 
-  /* 💖 wishlist (persistente) */
   const [isFav, setIsFav] = useState(false);
   useEffect(() => {
     const map = readWishlist();
-    setIsFav(Boolean(map[p.id]));
+    setIsFav(Boolean(map[String(p.id)]));
   }, [p.id]);
 
   const toggleFav = () => {
     setIsFav((prev) => {
       const next = !prev;
       const map = readWishlist();
-      if (next) map[p.id] = true;
-      else delete map[p.id];
+      if (next) map[String(p.id)] = true;
+      else delete map[String(p.id)];
       writeWishlist(map);
       onToggleFav?.(p.id, next);
       return next;
@@ -112,24 +108,21 @@ export default function ProductCard({
 
   return (
     <article className="w-[220px] text-left text-white font-[Oswald]">
-      {/* Imagen + overlay */}
       <div className="group relative overflow-hidden rounded-xl">
         <img
-          src={p.image || "/trendy-chocolate.png"} /* en /public */
+          src={p.image || "/trendy-chocolate.png"}
           alt={p.name}
           className="h-[230px] w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
-        {/* BEST SELLER */}
         {p.bestSeller && (
           <img
             src="/best-seller.png"
             alt="Best Seller"
-            className="absolute right-[-6px] top-[-6px] w-[95px] rotate-12"
+            className="absolute -right-1.5 -top-1.5 w-[95px] rotate-12"
           />
         )}
 
-        {/* Overlay QUICK ADD */}
         <div className="pointer-events-none absolute inset-0 hidden items-end justify-center group-hover:flex">
           <div className="pointer-events-auto mb-3 flex items-center gap-3 rounded-md bg-black/55 px-4 py-2">
             <button
@@ -157,44 +150,35 @@ export default function ProductCard({
         </div>
       </div>
 
-      {/* Nombre */}
       <h3 className="mt-3 text-[15px] font-semibold uppercase leading-tight tracking-wide">
         {p.name}
       </h3>
 
-      {/* Rating + corazón (wishlist) */}
       <div className="mt-2 flex items-center justify-start gap-3">
         <div className="flex gap-1">
-          {Array.from({ length: 5 }).map((_, i) => {
-            const idx = i + 1;
-            return (
-              <Star
-                key={i}
-                filled={idx <= display}
-                onEnter={() => setHover(idx)}
-                onLeave={() => setHover(null)}
-                onClick={() => setRating(idx)}
-              />
-            );
-          })}
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star
+              key={i}
+              filled={i < display}
+              onEnter={() => setHover(i + 1)}
+              onLeave={() => setHover(null)}
+              onClick={() => setRating(i + 1)}
+            />
+          ))}
         </div>
-
         <button
           type="button"
-          aria-label={isFav ? "Quitar de favoritos" : "Agregar a favoritos"}
-          aria-pressed={isFav}
           onClick={toggleFav}
-          className={`transition active:scale-95 ${isFav ? "text-adhara-pink" : ""}`}
-          title={isFav ? "En tu wishlist" : "Añadir a wishlist"}
+          aria-label="Agregar a favoritos"
+          className={`transition-transform hover:scale-110 ${
+            isFav ? "text-red-500" : "text-white"
+          }`}
         >
           <Heart filled={isFav} />
         </button>
       </div>
 
-      {/* Precio */}
-      <p className="mt-2 text-adhara-pink text-lg font-bold">
-        ${p.price.toFixed(2)}
-      </p>
+      <p className="mt-1 text-sm text-gray-300">{p.price}</p>
     </article>
   );
 }

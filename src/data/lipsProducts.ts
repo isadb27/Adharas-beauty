@@ -1,5 +1,5 @@
 
-export const products = [
+export const lipsProducts = [
   {
     id: 1,
     name: "Daphne ALOE LIP SHINE 1mL",

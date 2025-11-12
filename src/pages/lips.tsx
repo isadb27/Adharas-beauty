@@ -1,37 +1,36 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import ProductGrid from "../components/ProductGrid";
-import Banner from "../components/Banner"; // asegúrate de tener este componente
+import ProductCard from "../components/ProductCard";
 import { fetchProductsByCategory } from "../api/productsApi";
 import type { Product } from "../data/products";
 
-const Lips: React.FC = () => {
+export default function Lips() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProductsByCategory("lips")
-      .then((data: Product[]) => setProducts(data))
+      .then((data) => setProducts(data))
       .finally(() => setLoading(false));
   }, []);
 
+  if (loading) {
+    return (
+      <div className="text-center text-white py-10">
+        Loading lip products...
+      </div>
+    );
+  }
+
   return (
-    <>
-      <Navbar />
-      <Banner />
-
-      {loading ? (
-        <div className="text-center text-white py-10 text-lg font-semibold">
-          Loading products...
-        </div>
-      ) : (
-        <ProductGrid products={products} />
-      )}
-
-      <Footer />
-    </>
+    <section className="px-6 py-12">
+      <h2 className="text-3xl font-bold tracking-widest uppercase mb-10 text-center text-adhara-pink">
+        Lips Collection
+      </h2>
+      <div className="flex flex-wrap justify-center gap-8">
+        {products.map((p) => (
+          <ProductCard key={p.id} p={p} />
+        ))}
+      </div>
+    </section>
   );
-};
-
-export default Lips;
+}
