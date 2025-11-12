@@ -5,13 +5,14 @@ import Footer from "./components/Footer";
 import AddProduct from "./pages/AddProduct";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
-import { CartProvider } from "./context/CartContext";
+import { CartProvider } from "./context/CartContext";  
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Lips from "./pages/lips";
 import Brows from "./pages/brows";
 import Eyes from "./pages/eyes";
+import Face from "./pages/face"; // ✅ corregido
 
 import "./App.css";
 
@@ -26,12 +27,10 @@ export default function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            <Route path="/products" element={<Products />} />
-            <Route path="/lips" element={<Lips />} />
-            <Route path="/brows" element={<Brows />} />
-            <Route path="/eyes" element={<Eyes />} />
-            <Route path="/product/:slug" element={<ProductDetail />} />
-
+            <Route path="/lips" element={<Lips key="lips" />} />
+            <Route path="/eyes" element={<Eyes key="eyes" />} />
+            <Route path="/brows" element={<Brows key="brows" />} />
+            <Route path="/face" element={<Face key="face" />} />
 
             <Route path="/add-product" element={<AddProduct />} />
 

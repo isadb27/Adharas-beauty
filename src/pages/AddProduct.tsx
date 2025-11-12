@@ -6,7 +6,7 @@ export default function AddProduct() {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [details, setDetails] = useState("");
-  const [image, setImage] = useState<string | null>(null); // para nuevo estado para la imagen
+  const [image, setImage] = useState<string | null>(null); 
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
