@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaStar, FaHeart } from "react-icons/fa";
 import { useFavorites } from "../context/FavoritesContext";
+import { useNavigate } from "react-router-dom";
 import type { Product } from "../data/products";
 
 interface ProductCardProps {
@@ -11,9 +12,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const [rating, setRating] = useState<number>(0);
   const [hover, setHover] = useState<number>(0);
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/product/${p.slug}`);
+  };
 
   return (
-    <div className="bg-black border border-gray-800 rounded-2xl shadow-md overflow-hidden transition duration-300 hover:shadow-pink-500/30 hover:-translate-y-1 w-64">
+    <div
+      onClick={handleClick}
+      className="bg-black border border-gray-800 rounded-2xl shadow-md overflow-hidden transition duration-300 hover:shadow-pink-500/30 hover:-translate-y-1 w-64 cursor-pointer"
+    >
       <div className="relative">
         <img
           src={p.image}
@@ -21,9 +30,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
           className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
         />
 
-        {/* ❤️ Botón de favorito */}
         <button
-          onClick={() => toggleFavorite(p)}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite(p);
+          }}
           className="absolute top-3 right-3 text-gray-400 hover:text-pink-500 transition"
         >
           <FaHeart
@@ -37,10 +48,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
       </div>
 
       <div className="p-4 text-center">
-        <h3 className="text-white text-lg font-semibold tracking-wide mb-1">{p.name}</h3>
+        <h3 className="text-white text-lg font-semibold tracking-wide mb-1">
+          {p.name}
+        </h3>
         <p className="text-pink-400 text-sm font-medium mb-3">{p.price}</p>
 
-        {/* ⭐ Estrellas de valoración */}
         <div className="flex justify-center gap-1">
           {[...Array(5)].map((_, index) => {
             const ratingValue = index + 1;
@@ -49,7 +61,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
                 key={index}
                 type="button"
                 className="focus:outline-none"
-                onClick={() => setRating(ratingValue)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setRating(ratingValue);
+                }}
                 onMouseEnter={() => setHover(ratingValue)}
                 onMouseLeave={() => setHover(0)}
               >

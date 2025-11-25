@@ -11,7 +11,6 @@ export default function Signup() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 🔴 Nueva validación de campos vacíos
     if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       alert("Por favor llena todos los campos ✨");
       return;
@@ -22,17 +21,15 @@ export default function Signup() {
       return;
     }
 
-    // Guardar datos en localStorage
     const userData = { name, email, password };
     localStorage.setItem("user", JSON.stringify(userData));
 
     alert("Cuenta creada correctamente 💅");
-    navigate("/"); // temporal hasta que suban la landing
+    navigate("/"); 
   };
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-100 overflow-hidden">
-      {/* Formulario */}
       <div className="md:w-1/2 flex flex-col justify-center items-center p-6 md:p-8">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-gray-800">
           SIGN ME IN
@@ -92,7 +89,6 @@ export default function Signup() {
         </p>
       </div>
 
-      {/* Imagen a la derecha */}
       <div className="md:w-1/2 flex items-center justify-center bg-white">
         <img
           src="/signup-image.png"

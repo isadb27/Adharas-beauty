@@ -1,4 +1,3 @@
-// src/pages/eyes.tsx
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { fetchProductsByCategory } from "../api/productsApi";

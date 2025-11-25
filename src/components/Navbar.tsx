@@ -33,11 +33,13 @@ export default function Navbar() {
         </div>
 
         <div className="flex justify-center items-center">
-          <img
-            src={logofndonegro1}
-            alt="Adhara’s Beauty"
-            className="h-10 object-contain"
-          />
+          <Link to="/landig" className="flex items-center">
+            <img
+              src={logofndonegro1}
+              alt="Adhara’s Beauty"
+              className="h-10 object-contain cursor-pointer hover:opacity-80 transition"
+            />
+          </Link>
         </div>
 
         <div className="flex items-center space-x-5">
@@ -79,6 +81,7 @@ export default function Navbar() {
           />
         </div>
       )}
+
 
       <div className="bg-black flex justify-center space-x-10 py-2 border-b border-gray-800 relative">
         {menuItems.map((item) => (

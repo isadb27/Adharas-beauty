@@ -36,7 +36,6 @@ export default function ForgotPassword() {
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-100 overflow-hidden">
-      {/* Imagen */}
       <div className="w-full md:w-1/2 flex-shrink-0">
         <img
           src="/forgot-password-image.png"
@@ -45,7 +44,6 @@ export default function ForgotPassword() {
         />
       </div>
 
-      {/* Formulario */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-6 md:p-8">
         <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 text-center">
           RESET PASSWORD

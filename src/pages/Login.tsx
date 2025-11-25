@@ -6,7 +6,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = (e) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -24,10 +24,18 @@ export default function Login() {
 
     if (email === userData.email && password === userData.password) {
       alert(`Bienvenida de nuevo, ${userData.name}! 💖`);
-      navigate("/");
+      navigate("/landig"); 
     } else {
-      alert("Correo o contraseña incorrectos ❌");
+      alert("Correo o contraseña incorrectos");
     }
+  };
+
+  const goToAddProduct = () => {
+    navigate("/add-product");
+  };
+
+  const goToLandig = () => {
+    navigate("/landig");
   };
 
   return (
@@ -41,11 +49,11 @@ export default function Login() {
         />
       </div>
 
-      {/* Formulario */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-6 md:p-8">
         <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800">
           LOG IN
         </h2>
+
         <form
           className="w-full max-w-xs md:max-w-sm space-y-4"
           onSubmit={handleLogin}
@@ -66,7 +74,10 @@ export default function Login() {
           />
 
           <div className="flex justify-between text-sm text-gray-500">
-            <Link to="/forgot-password" className="text-pink-500 hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-pink-500 hover:underline"
+            >
               forgot password?
             </Link>
             <Link to="/signup" className="text-pink-500 hover:underline">
@@ -75,17 +86,27 @@ export default function Login() {
           </div>
 
           <div className="flex justify-between mt-6">
-            <Link
-              to="/"
+            <button
+              type="button"
+              onClick={goToLandig}
               className="border border-pink-500 text-pink-500 py-2 px-6 rounded-full hover:bg-pink-50"
             >
               HOME
-            </Link>
+            </button>
+
             <button
               type="submit"
               className="bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600"
             >
               LOGIN
+            </button>
+
+            <button
+              type="button"
+              onClick={goToAddProduct}
+              className="bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600"
+            >
+              Sellers
             </button>
           </div>
         </form>
@@ -93,3 +114,4 @@ export default function Login() {
     </div>
   );
 }
+

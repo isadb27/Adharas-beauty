@@ -39,9 +39,9 @@ export default function AddProduct() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      {/* Contenedor principal */}
+
       <div className="flex flex-col md:flex-row flex-grow">
-        {/* Imagen del lado izquierdo */}
+
         <div className="md:w-1/2 flex items-center justify-center bg-pink-300 relative">
           {image ? (
             <>
@@ -73,7 +73,6 @@ export default function AddProduct() {
           )}
         </div>
 
-        {/* Formulario del lado derecho */}
         <div className="md:w-1/2 flex flex-col justify-center items-center p-8 bg-gray-200">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 tracking-wide">
             PRODUCT INFO
@@ -138,7 +137,6 @@ export default function AddProduct() {
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

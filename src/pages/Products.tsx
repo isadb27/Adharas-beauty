@@ -3,9 +3,6 @@ import ProductCard from "../components/ProductCard";
 import { PRODUCTS } from "../data/products";
 
 export default function Products() {
-  // Diagnóstico visible en consola
-  // (si no ves nada, abre F12 y revisa)
-  // console.log("PRODUCTS:", PRODUCTS);
 
   const items = Array.isArray(PRODUCTS) ? PRODUCTS : [];
 
