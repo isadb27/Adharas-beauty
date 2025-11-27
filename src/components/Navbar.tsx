@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Search, Heart, ShoppingBag, User } from "lucide-react";
 import { useFavorites } from "../context/FavoritesContext";
+import { FaUserCircle } from "react-icons/fa"; // 🆕 Nuevo icono FontAwesome
 import logofndonegro1 from "../assets/logofndonegro1.png"; 
 
 export default function Navbar() {
@@ -63,6 +64,14 @@ export default function Navbar() {
             <ShoppingBag size={20} />
           </button>
 
+          {/* 🆕 Nuevo icono de Perfil */}
+          <Link
+            to="/profile"
+            className="hover:text-pink-400 transition text-xl"
+          >
+            <FaUserCircle />
+          </Link>
+
           <Link
             to="/"
             className="flex items-center hover:text-pink-400 transition text-sm"
@@ -81,7 +90,6 @@ export default function Navbar() {
           />
         </div>
       )}
-
 
       <div className="bg-black flex justify-center space-x-10 py-2 border-b border-gray-800 relative">
         {menuItems.map((item) => (
