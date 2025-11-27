@@ -1,41 +1,36 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../store/authSlice";
+import { RootState, AppDispatch } from "../store/store";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const authUser = useSelector((state: RootState) => state.auth.user);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      alert("Por favor, completa todos los campos.");
+    if (!authUser) {
+      alert("No hay usuarios registrados");
       return;
     }
 
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) {
-      alert("No hay ninguna cuenta registrada");
+    if (email !== authUser.email) {
+      alert("Correo incorrecto");
       return;
     }
 
-    const userData = JSON.parse(storedUser);
+    // como aún no validamos password real, solo hacemos login
+    dispatch(loginUser(authUser));
 
-    if (email === userData.email && password === userData.password) {
-      alert(`Bienvenida de nuevo, ${userData.name}! 💖`);
-      navigate("/landig"); 
-    } else {
-      alert("Correo o contraseña incorrectos");
-    }
-  };
-
-  const goToAddProduct = () => {
-    navigate("/add-product");
-  };
-
-  const goToLandig = () => {
-    navigate("/landig");
+    alert(`Bienvenida de nuevo, ${authUser.name}! 💖`);
+    navigate("/home");
   };
 
   return (
@@ -50,68 +45,51 @@ export default function Login() {
       </div>
 
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-6 md:p-8">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800">
-          LOG IN
-        </h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800">LOG IN</h2>
 
-        <form
-          className="w-full max-w-xs md:max-w-sm space-y-4"
-          onSubmit={handleLogin}
-        >
+        <form className="w-full max-w-xs md:max-w-sm space-y-4" onSubmit={handleLogin}>
           <input
             type="email"
             placeholder="@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 rounded-full bg-pink-100 placeholder-gray-500 focus:outline-none"
+            className="w-full p-3 rounded-full bg-pink-100 placeholder-gray-500"
           />
+
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 rounded-full bg-pink-100 placeholder-gray-500 focus:outline-none"
+            className="w-full p-3 rounded-full bg-pink-100 placeholder-gray-500"
           />
 
           <div className="flex justify-between text-sm text-gray-500">
-            <Link
-              to="/forgot-password"
-              className="text-pink-500 hover:underline"
-            >
-              forgot password?
-            </Link>
-            <Link to="/signup" className="text-pink-500 hover:underline">
-              sign up ▼
-            </Link>
+            <Link to="/forgot-password" className="text-pink-500 hover:underline">forgot password?</Link>
+            <Link to="/signup" className="text-pink-500 hover:underline">sign up ▼</Link>
           </div>
 
           <div className="flex justify-between mt-6">
-            <button
-              type="button"
-              onClick={goToLandig}
+            <Link
+              to="/home"
               className="border border-pink-500 text-pink-500 py-2 px-6 rounded-full hover:bg-pink-50"
             >
               HOME
-            </button>
+            </Link>
 
-            <button
-              type="submit"
-              className="bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600"
-            >
+            <button type="submit" className="bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600">
               LOGIN
             </button>
 
-            <button
-              type="button"
-              onClick={goToAddProduct}
+            <Link
+              to="/add-product"
               className="bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600"
             >
               Sellers
-            </button>
+            </Link>
           </div>
         </form>
       </div>
     </div>
   );
 }
-

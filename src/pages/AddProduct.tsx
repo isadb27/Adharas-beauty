@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Footer from "../pages/Footer"; 
+import { useDispatch } from "react-redux";
+import { addProduct } from "../store/productSlice";
+import { AppDispatch } from "../store/store";
+import Footer from "../components/Footer";
 
 export default function AddProduct() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [details, setDetails] = useState("");
-  const [image, setImage] = useState<string | null>(null); 
+  const [image, setImage] = useState<string | null>(null);
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,10 +21,16 @@ export default function AddProduct() {
       return;
     }
 
-    const newProduct = { productName, price, details, image };
-    const existingProducts = JSON.parse(localStorage.getItem("products") || "[]");
+    const newProduct = {
+      id: crypto.randomUUID(),
+      productName,
+      price,
+      details,
+      image,
+    };
 
-    localStorage.setItem("products", JSON.stringify([...existingProducts, newProduct]));
+    dispatch(addProduct(newProduct));
+
     alert("Producto agregado correctamente 💖");
 
     setProductName("");
