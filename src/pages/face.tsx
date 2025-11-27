@@ -20,7 +20,7 @@ export default function Face() {
   return (
     <section className="px-6 py-12">
       <h2 className="text-3xl font-bold tracking-widest uppercase mb-10 text-center text-adhara-pink">
-        Skincare Collection
+        Face Collection
       </h2>
       <div className="flex flex-wrap justify-center gap-8">
         {products.map((p) => (
