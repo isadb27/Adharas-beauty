@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 
 import AddProduct from "./pages/AddProduct";
 import ProductDetail from "./pages/ProductDetail";
+
 import { FavoritesProvider } from "./context/FavoritesContext";
 
 import Login from "./pages/Login";
@@ -21,7 +22,10 @@ import Skincare from "./pages/skincare";
 
 import Favorites from "./pages/Favorites";
 import Landing from "./pages/Landig";
+
 import ClientUser from "./pages/ClientUser";
+import SellerProfile from "./pages/SellerProfile"; // NUEVO PERFIL VENDEDOR
+
 import Cart from "./pages/cart";
 
 import "./App.css";
@@ -44,17 +48,17 @@ export default function App() {
       <div className="min-h-screen flex flex-col bg-black text-white font-sans">
 
         <Routes>
-          
-          {/* Redirección inicial */}
+
+          {/* REDIRECCIÓN INICIAL */}
           <Route path="/" element={<Navigate to="/login" replace />} />
 
-          {/* TODAS ESTAS RUTAS TIENEN NAVBAR + FOOTER */}
+          {/* LOGIN / SIGNUP / FORGOT SIN NAVBAR Y SIN FOOTER */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          {/* TODO LO DEMÁS CON NAVBAR + FOOTER */}
           <Route path="/" element={<MainLayout />}>
-            
-            {/* Login con nav y footer */}
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<Signup />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
 
             {/* Páginas principales */}
             <Route path="home" element={<Landing />} />
@@ -70,9 +74,14 @@ export default function App() {
 
             <Route path="cart" element={<Cart />} />
             <Route path="add-product" element={<AddProduct />} />
+
+            {/* PERFIL CLIENTE */}
             <Route path="profile" element={<ClientUser />} />
 
-            {/* fallback */}
+            {/* PERFIL VENDEDOR*/}
+            <Route path="seller-profile" element={<SellerProfile />} />
+
+            {/* Fallback */}
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Route>
 

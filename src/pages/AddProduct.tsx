@@ -1,12 +1,23 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../store/productSlice";
-import { AppDispatch } from "../store/store";
-import Footer from "../components/Footer";
+import { AppDispatch, RootState } from "../store/store";
 
 export default function AddProduct() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  // ⛔ Evitar que un cliente o no logueado acceda
+  useEffect(() => {
+    if (!user) {
+      navigate("/"); // no logueado → login
+    } else if (user.role !== "seller") {
+      navigate("/profile"); // cliente → perfil normal
+    }
+  }, [user, navigate]);
 
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
@@ -27,6 +38,7 @@ export default function AddProduct() {
       price,
       details,
       image,
+      sellerEmail: user?.email, // 🔥 Asignar vendedor al producto
     };
 
     dispatch(addProduct(newProduct));
@@ -50,9 +62,8 @@ export default function AddProduct() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-
       <div className="flex flex-col md:flex-row flex-grow">
-
+        {/* IMAGEN DEL PRODUCTO */}
         <div className="md:w-1/2 flex items-center justify-center bg-pink-300 relative">
           {image ? (
             <>
@@ -84,6 +95,7 @@ export default function AddProduct() {
           )}
         </div>
 
+        {/* FORMULARIO */}
         <div className="md:w-1/2 flex flex-col justify-center items-center p-8 bg-gray-200">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 tracking-wide">
             PRODUCT INFO
@@ -118,7 +130,7 @@ export default function AddProduct() {
 
             <div className="flex justify-between w-full mt-6 space-x-2">
               <Link
-                to="/"
+                to="/landing"
                 className="border border-pink-500 text-pink-500 py-2 px-6 rounded-md hover:bg-pink-50 transition-colors"
               >
                 HOME
@@ -147,8 +159,6 @@ export default function AddProduct() {
           </form>
         </div>
       </div>
-
-
     </div>
   );
 }

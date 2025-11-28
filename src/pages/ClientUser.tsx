@@ -6,6 +6,7 @@ import {
   decreaseQuantity,
   removeFromCart,
 } from "../store/cartSlice";
+import { logoutUser } from "../store/authSlice";
 
 export default function ClientUser() {
   const navigate = useNavigate();
@@ -57,6 +58,11 @@ export default function ClientUser() {
       localStorage.setItem("userImage", reader.result as string);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate("/");
   };
 
   return (
@@ -164,6 +170,13 @@ export default function ClientUser() {
               className="bg-[#ff3796] text-white px-6 py-2 rounded-full"
             >
               FAVORITES
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition"
+            >
+              LOGOUT
             </button>
           </div>
         </div>
