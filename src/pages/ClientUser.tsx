@@ -1,44 +1,41 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ClientUser() {
-  const [user, setUser] = useState<{
-    name: string;
-    email: string;
-    address: string;
-    payment: string;
-    role: string;
-  } | null>(null);
+  const navigate = useNavigate();
 
-  const [image, setImage] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Campos del formulario
-  const [editData, setEditData] = useState({
+  const [user, setUser] = useState({
     name: "",
     email: "",
     address: "",
     payment: "",
   });
 
+  const [image, setImage] = useState<string | null>(null);
+
+  // Cargar info almacenada
   useEffect(() => {
     const saved = localStorage.getItem("user");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      setUser(parsed);
-
-      // llenar los campos del formulario
-      setEditData({
-        name: parsed.name || "",
-        email: parsed.email || "",
-        address: parsed.address || "",
-        payment: parsed.payment || "",
-      });
-    }
+    if (saved) setUser(JSON.parse(saved));
 
     const savedImg = localStorage.getItem("userImage");
     if (savedImg) setImage(savedImg);
   }, []);
 
+  // Guardar cambios
+  const handleSave = () => {
+    localStorage.setItem("user", JSON.stringify(user));
+    setIsEditing(false);
+  };
+
+  // Manejo de inputs
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  // Cambio de foto
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -51,110 +48,129 @@ export default function ClientUser() {
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
-    if (!user) return;
-
-    const updatedUser = { ...user, ...editData };
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-
-    setIsEditing(false);
-  };
-
-  if (!user) {
-    return <div className="p-10 text-center text-white">No profile data found.</div>;
-  }
-
   return (
-    <div className="p-10 flex flex-col items-center text-white">
-      <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+    <div className="w-full bg-[#d9d9d9] text-black p-10 flex flex-col">
 
-      <div className="flex flex-col items-center space-y-4">
+      {/* -------------------------- USER INFO -------------------------- */}
+      <div className="flex w-full">
 
-        <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-700">
-          {image ? (
-            <img src={image} alt="profile" className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-300">
-              No photo
-            </div>
-          )}
-        </div>
+        {/* FOTO PERFIL */}
+        <div className="w-1/2 bg-[#f06aa7] flex justify-center items-center p-10 relative">
+          <div className="w-[250px] h-[250px] bg-pink-300 rounded-full overflow-hidden">
+            {image ? (
+              <img src={image} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-white text-xl">
+                No photo
+              </div>
+            )}
+          </div>
 
-        <label className="cursor-pointer bg-pink-500 px-4 py-2 rounded-full text-white hover:bg-pink-600">
-          Upload Photo
-          <input type="file" className="hidden" onChange={handleImage} />
-        </label>
-
-        <p className="text-xl">{user.name}</p>
-        <p className="text-gray-400">{user.email}</p>
-        <p className="text-pink-400">{user.role}</p>
-
-        <button
-          onClick={() => setIsEditing(true)}
-          className="mt-4 bg-purple-600 px-5 py-2 rounded-full hover:bg-purple-700 transition"
-        >
-          Edit Profile
-        </button>
-      </div>
-
-      {/* Modal de Edición */}
-      {isEditing && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center px-4">
-          <div className="bg-gray-900 p-6 rounded-xl w-full max-w-md space-y-4 shadow-lg border border-gray-700">
-
-            <h2 className="text-2xl font-bold text-center mb-4">Edit Profile</h2>
-
-            <input
-              type="text"
-              placeholder="Name"
-              className="w-full p-2 bg-gray-800 text-white rounded"
-              value={editData.name}
-              onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-            />
-
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full p-2 bg-gray-800 text-white rounded"
-              value={editData.email}
-              onChange={(e) => setEditData({ ...editData, email: e.target.value })}
-            />
-
-            <input
-              type="text"
-              placeholder="Address"
-              className="w-full p-2 bg-gray-800 text-white rounded"
-              value={editData.address}
-              onChange={(e) => setEditData({ ...editData, address: e.target.value })}
-            />
-
-            <input
-              type="text"
-              placeholder="Payment method"
-              className="w-full p-2 bg-gray-800 text-white rounded"
-              value={editData.payment}
-              onChange={(e) => setEditData({ ...editData, payment: e.target.value })}
-            />
-
-            <div className="flex justify-between mt-4">
-              <button
-                className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700"
-                onClick={() => setIsEditing(false)}
-              >
-                Cancel
-              </button>
-
-              <button
-                className="bg-pink-500 px-4 py-2 rounded hover:bg-pink-600"
-                onClick={handleSave}
-              >
-                Save Changes
-              </button>
-            </div>
+          <div className="absolute bottom-10">
+            <label className="cursor-pointer bg-pink-500 px-4 py-2 rounded-full text-white hover:bg-pink-600">
+              Upload Photo
+              <input type="file" className="hidden" onChange={handleImage} />
+            </label>
           </div>
         </div>
-      )}
+
+        {/* INFO DEL USUARIO */}
+        <div className="w-1/2 flex flex-col p-16 space-y-6">
+          <h1 className="text-4xl font-bold tracking-widest mb-3">
+            USER INFO
+          </h1>
+
+          <input
+            name="name"
+            disabled={!isEditing}
+            value={user.name}
+            onChange={handleChange}
+            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            placeholder="name"
+          />
+
+          <input
+            name="email"
+            disabled={!isEditing}
+            value={user.email}
+            onChange={handleChange}
+            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            placeholder="email"
+          />
+
+          <input
+            name="address"
+            disabled={!isEditing}
+            value={user.address}
+            onChange={handleChange}
+            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            placeholder="add address"
+          />
+
+          <input
+            name="payment"
+            disabled={!isEditing}
+            value={user.payment}
+            onChange={handleChange}
+            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            placeholder="add payment"
+          />
+
+          {/* BOTÓN EDITAR / GUARDAR */}
+          {isEditing ? (
+            <button
+              onClick={handleSave}
+              className="w-[200px] mt-3 bg-purple-600 text-white py-3 rounded-full"
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="w-[200px] mt-3 bg-purple-600 text-white py-3 rounded-full"
+            >
+              Edit Profile
+            </button>
+          )}
+
+          {/* ----------------- BOTONES DE NAVEGACIÓN ----------------- */}
+          <div className="flex space-x-4 mt-5">
+            <button
+              onClick={() => navigate("/home")}
+              className="border-2 border-black px-6 py-2 rounded-full"
+            >
+              HOME
+            </button>
+
+            <button
+              onClick={() => navigate("/cart")}
+              className="border-2 border-black px-6 py-2 rounded-full"
+            >
+              CART
+            </button>
+
+            <button
+              onClick={() => navigate("/favorites")}
+              className="bg-[#ff3796] text-white px-6 py-2 rounded-full"
+            >
+              FAVORITES
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* -------------------------- ESPACIO PARA EL CARRITO -------------------------- */}
+      <div className="mt-20">
+        <h2 className="text-3xl font-bold text-black mb-8">YOUR CART</h2>
+
+        <div className="grid grid-cols-4 gap-6">
+          {/* Placeholder del carrito */}
+          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
+          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
+          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
+          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
+        </div>
+      </div>
     </div>
   );
 }
