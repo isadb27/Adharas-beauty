@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 
 export default function ClientProfile() {
   const user = useSelector((state: RootState) => state.user);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -34,12 +35,12 @@ export default function ClientProfile() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-200 text-black">
 
-      {/* NAVBAR*/}
+      {/* NAVBAR */}
       <Navbar />
 
       <div className="flex flex-col md:flex-row flex-grow">
 
-        {/* FOTO / ICONO */}
+        {/* FOTO */}
         <div className="md:w-1/2 bg-pink-400 flex flex-col items-center justify-center p-10">
           {user.image ? (
             <img
@@ -69,7 +70,7 @@ export default function ClientProfile() {
           />
         </div>
 
-        {/* PANEL DERECHO */}
+        {/* INFO */}
         <div className="md:w-1/2 p-10 flex flex-col">
           <h2 className="text-4xl font-bold tracking-wide mb-6">USER INFO</h2>
 
@@ -116,12 +117,12 @@ export default function ClientProfile() {
               HOME
             </Link>
 
-            <button
-              disabled
-              className="border border-black text-black py-2 px-6 rounded-md opacity-50 cursor-not-allowed"
+            <Link
+              to="/cart"
+              className="border border-black text-black py-2 px-6 rounded-md hover:bg-gray-100 transition"
             >
-              CART (coming soon)
-            </button>
+              CART
+            </Link>
 
             <Link
               to="/favorites"
@@ -133,16 +134,34 @@ export default function ClientProfile() {
         </div>
       </div>
 
-      {/* CARRITO*/}
+      {/* CARRITO EN PERFIL */}
       <div className="px-10 py-12">
         <h2 className="text-3xl font-bold tracking-wide mb-8">YOUR CART</h2>
 
-        <div className="text-gray-600 text-lg">
-          Cart will display here once backend/merge is ready.
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-        <div className="mt-4 w-full h-40 bg-white/60 rounded-xl border border-gray-300 flex items-center justify-center text-gray-400">
-          (placeholder)
+          {cartItems.length === 0 ? (
+            <p className="text-gray-500 text-lg col-span-4">
+              Your cart is empty
+            </p>
+          ) : (
+            cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white h-[250px] shadow-md rounded-xl p-4 flex flex-col"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-32 object-cover rounded-md"
+                />
+
+                <h3 className="font-semibold mt-2">{item.name}</h3>
+                <p className="text-gray-600 text-sm">${item.price}</p>
+                <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
