@@ -60,11 +60,11 @@ export default function Navbar() {
             )}
           </Link>
 
-          <button className="hover:text-pink-400 transition">
-            <ShoppingBag size={20} />
-          </button>
+         <Link to="/cart" className="hover:text-pink-400 transition relative">
+  <ShoppingBag size={20} />
+</Link>
 
-          {/* 🆕 Nuevo icono de Perfil */}
+
           <Link
             to="/profile"
             className="hover:text-pink-400 transition text-xl"

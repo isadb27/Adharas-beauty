@@ -26,7 +26,6 @@ export default function Login() {
       return;
     }
 
-    // como aún no validamos password real, solo hacemos login
     dispatch(loginUser(authUser));
 
     alert(`Bienvenida de nuevo, ${authUser.name}! 💖`);
@@ -35,7 +34,6 @@ export default function Login() {
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-100 overflow-hidden">
-      {/* Imagen */}
       <div className="w-full md:w-1/2 flex-shrink-0">
         <img
           src="/login-image.png"
@@ -45,7 +43,9 @@ export default function Login() {
       </div>
 
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-6 md:p-8">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800">LOG IN</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800">
+          LOG IN
+        </h2>
 
         <form className="w-full max-w-xs md:max-w-sm space-y-4" onSubmit={handleLogin}>
           <input
@@ -65,8 +65,12 @@ export default function Login() {
           />
 
           <div className="flex justify-between text-sm text-gray-500">
-            <Link to="/forgot-password" className="text-pink-500 hover:underline">forgot password?</Link>
-            <Link to="/signup" className="text-pink-500 hover:underline">sign up ▼</Link>
+            <Link to="/forgot-password" className="text-pink-500 hover:underline">
+              forgot password?
+            </Link>
+            <Link to="/signup" className="text-pink-500 hover:underline">
+              sign up ▼
+            </Link>
           </div>
 
           <div className="flex justify-between mt-6">
@@ -77,7 +81,10 @@ export default function Login() {
               HOME
             </Link>
 
-            <button type="submit" className="bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600">
+            <button
+              type="submit"
+              className="bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600"
+            >
               LOGIN
             </button>
 
