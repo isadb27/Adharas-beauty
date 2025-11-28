@@ -3,7 +3,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface AuthUser {
   name: string;
   email: string;
-  role: "client" | "seller";
+  role: "client" | "seller"; // importante para redirigir a cada perfil
+  image?: string; // <- agregamos propiedad opcional para la foto
 }
 
 interface AuthState {
@@ -27,8 +28,14 @@ const authSlice = createSlice({
     logoutUser: (state) => {
       state.user = null;
     },
+    // Opcional: actualizar imagen del usuario
+    updateUserImage: (state, action: PayloadAction<string>) => {
+      if (state.user) {
+        state.user.image = action.payload;
+      }
+    },
   },
 });
 
-export const { signUpUser, loginUser, logoutUser } = authSlice.actions;
+export const { signUpUser, loginUser, logoutUser, updateUserImage } = authSlice.actions;
 export default authSlice.reducer;

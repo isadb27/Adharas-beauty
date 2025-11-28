@@ -3,6 +3,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Search, Heart, ShoppingBag, User } from "lucide-react";
 import { useFavorites } from "../context/FavoritesContext";
 import { FaUserCircle } from "react-icons/fa";
+<<<<<<< HEAD
+=======
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+
+>>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
 import logofndonegro1 from "../assets/logofndonegro1.png";
 
 export default function Navbar() {
@@ -12,6 +18,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { favorites } = useFavorites();
 
+<<<<<<< HEAD
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const value = query.trim().toLowerCase();
@@ -20,6 +27,14 @@ export default function Navbar() {
     navigate(`/search?q=${encodeURIComponent(value)}`);
     setShowSearch(false);
   };
+=======
+  // 🔥 TOMAMOS EL USER DESDE REDUX
+  const authUser = useSelector((state: RootState) => state.auth.user);
+
+  // 🔥 RUTA DINÁMICA SEGÚN ROL
+  const profilePath =
+    authUser?.role === "seller" ? "/seller-profile" : "/profile";
+>>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
 
   const menuItems = [
     { name: "Eyes", path: "/eyes" },
@@ -32,7 +47,11 @@ export default function Navbar() {
 
   return (
     <nav className="w-full text-white font-sans">
+<<<<<<< HEAD
    
+=======
+      {/* TOP BAR */}
+>>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
       <div className="bg-[#150010] text-sm text-center py-1">
         Hurry! Discounts You Don’t Want to Miss{" "}
         <span className="text-pink-400 underline cursor-pointer">
@@ -40,9 +59,11 @@ export default function Navbar() {
         </span>
       </div>
 
+      {/* MAIN NAV */}
       <div className="bg-black flex justify-between items-center px-6 py-3 border-b border-gray-800">
         <div className="text-sm text-gray-300">United States | English</div>
 
+<<<<<<< HEAD
         <Link to="/home" className="flex items-center">
           <img
             src={logofndonegro1}
@@ -50,8 +71,20 @@ export default function Navbar() {
             className="h-10 object-contain cursor-pointer hover:opacity-80 transition"
           />
         </Link>
+=======
+        <div className="flex justify-center items-center">
+          <Link to="/home" className="flex items-center">
+            <img
+              src={logofndonegro1}
+              alt="Adhara’s Beauty"
+              className="h-10 object-contain cursor-pointer hover:opacity-80 transition"
+            />
+          </Link>
+        </div>
+>>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
 
         <div className="flex items-center space-x-5">
+          {/* SEARCH */}
           <button
             onClick={() => setShowSearch(!showSearch)}
             className="hover:text-pink-400 transition"
@@ -59,6 +92,7 @@ export default function Navbar() {
             <Search size={20} />
           </button>
 
+          {/* FAVORITES */}
           <Link to="/favorites" className="relative hover:text-pink-400 transition">
             <Heart size={20} />
             {favorites.length > 0 && (
@@ -68,20 +102,41 @@ export default function Navbar() {
             )}
           </Link>
 
+<<<<<<< HEAD
+=======
+          {/* CART */}
+>>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
           <Link to="/cart" className="hover:text-pink-400 transition relative">
             <ShoppingBag size={20} />
           </Link>
 
+<<<<<<< HEAD
           <Link to="/profile" className="hover:text-pink-400 transition text-xl">
             <FaUserCircle />
           </Link>
 
           <Link to="/login" className="flex items-center hover:text-pink-400 transition text-sm">
+=======
+          {/* PERFIL — DINÁMICO CLIENTE/SELLER */}
+          <Link
+            to={profilePath}
+            className="hover:text-pink-400 transition text-xl"
+          >
+            <FaUserCircle />
+          </Link>
+
+          {/* SIGN IN */}
+          <Link
+            to="/login"
+            className="flex items-center hover:text-pink-400 transition text-sm"
+          >
+>>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
             <User size={18} className="mr-1" /> Sign in
           </Link>
         </div>
       </div>
 
+      {/* SEARCH BAR */}
       {showSearch && (
         <div className="bg-black px-6 py-3 border-b border-gray-800 animate-fadeIn">
           <form onSubmit={handleSearch}>
@@ -96,6 +151,7 @@ export default function Navbar() {
         </div>
       )}
 
+      {/* CATEGORY MENU */}
       <div className="bg-black flex justify-center space-x-10 py-2 border-b border-gray-800 relative">
         {menuItems.map((item) => (
           <Link

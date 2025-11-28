@@ -38,7 +38,12 @@ export default function Signup() {
 
     alert("Cuenta creada correctamente");
 
-    navigate(role === "client" ? "/profile" : "/seller-profile");
+    // 🔥 REDIRECCIÓN SEGÚN EL ROL
+    if (role === "client") {
+      navigate("/profile");
+    } else {
+      navigate("/seller-profile");
+    }
   };
 
   return (
@@ -78,7 +83,7 @@ export default function Signup() {
             placeholder="Confirm password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full p-3 rounded-full bg-pink-100 placeholder-gray-500 focus:outline-none"
+            className="w-full p-3 rounded-full bg-ppink-100 placeholder-gray-500 focus:outline-none"
           />
 
           <div className="flex flex-col space-y-2 mt-4">
@@ -126,7 +131,10 @@ export default function Signup() {
 
         <p className="text-sm mt-4 text-gray-500">
           are you already part of the team?
-          <Link to="/" className="text-pink-500 hover:underline"> login ▲ </Link>
+          <Link to="/" className="text-pink-500 hover:underline">
+            {" "}
+            login ▲{" "}
+          </Link>
         </p>
       </div>
 

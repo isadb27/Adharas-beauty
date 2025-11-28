@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 
 import AddProduct from "./pages/AddProduct";
 import ProductDetail from "./pages/ProductDetail";
+
 import { FavoritesProvider } from "./context/FavoritesContext";
 
 import Login from "./pages/Login";
@@ -21,7 +22,10 @@ import Skincare from "./pages/skincare";
 
 import Favorites from "./pages/Favorites";
 import Landing from "./pages/Landig";
+
 import ClientUser from "./pages/ClientUser";
+import SellerProfile from "./pages/SellerProfile"; // NUEVO PERFIL VENDEDOR
+
 import Cart from "./pages/cart";
 import SearchResults from "./pages/SearchResults"; 
 
@@ -45,6 +49,7 @@ export default function App() {
       <div className="min-h-screen flex flex-col bg-black text-white font-sans">
 
         <Routes>
+<<<<<<< HEAD
 
           <Route index element={<Navigate to="/login" replace />} />
 
@@ -53,6 +58,19 @@ export default function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
+=======
+
+          {/* REDIRECCIÓN INICIAL */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+
+          {/* LOGIN / SIGNUP / FORGOT SIN NAVBAR Y SIN FOOTER */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          {/* TODO LO DEMÁS CON NAVBAR + FOOTER */}
+          <Route path="/" element={<MainLayout />}>
+>>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
 
             <Route path="home" element={<Landing />} />
             <Route path="lips" element={<Lips />} />
@@ -67,10 +85,19 @@ export default function App() {
 
             <Route path="cart" element={<Cart />} />
             <Route path="add-product" element={<AddProduct />} />
+
+            {/* PERFIL CLIENTE */}
             <Route path="profile" element={<ClientUser />} />
 
+<<<<<<< HEAD
             <Route path="search" element={<SearchResults />} />
 
+=======
+            {/* PERFIL VENDEDOR*/}
+            <Route path="seller-profile" element={<SellerProfile />} />
+
+            {/* Fallback */}
+>>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
             <Route path="*" element={<Navigate to="/login" replace />} />
 
           </Route>

@@ -9,7 +9,7 @@ const Lips = () => {
 useEffect(() => {
   async function load() {
     const data = await fetchProductsByCategory("lips");
-    console.log("🧪 Productos LIPS:", data);
+    console.log("Productos LIPS:", data);
     setProducts(data);
     setLoading(false);
   }

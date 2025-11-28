@@ -1,15 +1,17 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/store";
 import { updateUser } from "../store/userSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { logoutUser } from "../store/authSlice";
 
 export default function ClientProfile() {
   const user = useSelector((state: RootState) => state.user);
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -30,6 +32,11 @@ export default function ClientProfile() {
 
   const triggerUpload = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser()); // limpia usuario de authSlice
+    navigate("/");          // redirige al inicio
   };
 
   return (
@@ -106,6 +113,7 @@ export default function ClientProfile() {
             />
           </div>
 
+          {/* BOTONES */}
           <div className="flex space-x-4 mt-8">
             <Link
               to="/home"
@@ -127,6 +135,13 @@ export default function ClientProfile() {
             >
               FAVORITES
             </Link>
+
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white py-2 px-6 rounded-md hover:bg-red-600 transition"
+            >
+              LOGOUT
+            </button>
           </div>
         </div>
       </div>
