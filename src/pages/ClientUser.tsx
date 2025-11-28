@@ -1,9 +1,21 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import {
+  addToCart,
+  decreaseQuantity,
+  removeFromCart,
+} from "../store/cartSlice";
 
 export default function ClientUser() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
+  // Traer carrito real desde Redux
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const total = cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+  // Manejo de perfil local 
   const [isEditing, setIsEditing] = useState(false);
 
   const [user, setUser] = useState({
@@ -14,8 +26,8 @@ export default function ClientUser() {
   });
 
   const [image, setImage] = useState<string | null>(null);
+  const fileInput = useRef<HTMLInputElement | null>(null);
 
-  // Cargar info almacenada
   useEffect(() => {
     const saved = localStorage.getItem("user");
     if (saved) setUser(JSON.parse(saved));
@@ -24,18 +36,17 @@ export default function ClientUser() {
     if (savedImg) setImage(savedImg);
   }, []);
 
-  // Guardar cambios
   const handleSave = () => {
     localStorage.setItem("user", JSON.stringify(user));
     setIsEditing(false);
   };
 
-  // Manejo de inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  // Cambio de foto
+  const handleUpload = () => fileInput.current?.click();
+
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -51,11 +62,11 @@ export default function ClientUser() {
   return (
     <div className="w-full bg-[#d9d9d9] text-black p-10 flex flex-col">
 
-      {/* -------------------------- USER INFO -------------------------- */}
+      {/* --------------------- USER INFO --------------------- */}
       <div className="flex w-full">
 
-        {/* FOTO PERFIL */}
-        <div className="w-1/2 bg-[#f06aa7] flex justify-center items-center p-10 relative">
+        {/* FOTO */}
+        <div className="w-1/2 bg-[#f06aa7] flex flex-col items-center justify-center p-10 relative">
           <div className="w-[250px] h-[250px] bg-pink-300 rounded-full overflow-hidden">
             {image ? (
               <img src={image} className="w-full h-full object-cover" />
@@ -66,26 +77,26 @@ export default function ClientUser() {
             )}
           </div>
 
-          <div className="absolute bottom-10">
-            <label className="cursor-pointer bg-pink-500 px-4 py-2 rounded-full text-white hover:bg-pink-600">
-              Upload Photo
-              <input type="file" className="hidden" onChange={handleImage} />
-            </label>
-          </div>
+          <button
+            onClick={handleUpload}
+            className="mt-6 bg-white text-pink-600 px-5 py-2 rounded-full font-semibold hover:bg-gray-100"
+          >
+            Upload Photo
+          </button>
+
+          <input type="file" ref={fileInput} className="hidden" onChange={handleImage} />
         </div>
 
-        {/* INFO DEL USUARIO */}
+        {/* DATOS */}
         <div className="w-1/2 flex flex-col p-16 space-y-6">
-          <h1 className="text-4xl font-bold tracking-widest mb-3">
-            USER INFO
-          </h1>
+          <h1 className="text-4xl font-bold tracking-widest mb-3">USER INFO</h1>
 
           <input
             name="name"
             disabled={!isEditing}
             value={user.name}
             onChange={handleChange}
-            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            className="w-[80%] px-5 py-3 rounded-full bg-white disabled:bg-[#e6e6e6]"
             placeholder="name"
           />
 
@@ -94,7 +105,7 @@ export default function ClientUser() {
             disabled={!isEditing}
             value={user.email}
             onChange={handleChange}
-            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            className="w-[80%] px-5 py-3 rounded-full bg-white disabled:bg-[#e6e6e6]"
             placeholder="email"
           />
 
@@ -103,7 +114,7 @@ export default function ClientUser() {
             disabled={!isEditing}
             value={user.address}
             onChange={handleChange}
-            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            className="w-[80%] px-5 py-3 rounded-full bg-white disabled:bg-[#e6e6e6]"
             placeholder="add address"
           />
 
@@ -112,11 +123,10 @@ export default function ClientUser() {
             disabled={!isEditing}
             value={user.payment}
             onChange={handleChange}
-            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            className="w-[80%] px-5 py-3 rounded-full bg-white disabled:bg-[#e6e6e6]"
             placeholder="add payment"
           />
 
-          {/* BOTÓN EDITAR / GUARDAR */}
           {isEditing ? (
             <button
               onClick={handleSave}
@@ -133,7 +143,7 @@ export default function ClientUser() {
             </button>
           )}
 
-          {/* ----------------- BOTONES DE NAVEGACIÓN ----------------- */}
+          {/* BOTONES */}
           <div className="flex space-x-4 mt-5">
             <button
               onClick={() => navigate("/home")}
@@ -159,16 +169,54 @@ export default function ClientUser() {
         </div>
       </div>
 
-      {/* -------------------------- ESPACIO PARA EL CARRITO -------------------------- */}
+      {/* --------------------- CARRITO --------------------- */}
       <div className="mt-20">
         <h2 className="text-3xl font-bold text-black mb-8">YOUR CART</h2>
 
-        <div className="grid grid-cols-4 gap-6">
-          {/* Placeholder del carrito */}
-          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
-          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
-          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
-          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
+        {cartItems.length === 0 ? (
+          <p className="text-gray-500 text-lg">No items in your cart.</p>
+        ) : (
+          <div className="grid grid-cols-2 gap-6">
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white p-6 rounded-xl shadow-md flex flex-col"
+              >
+                <p className="font-bold text-lg">{item.name}</p>
+                <p className="text-gray-500">${item.price}</p>
+
+                <div className="flex items-center gap-3 mt-4">
+                  <button
+                    className="px-3 py-1 bg-gray-300 rounded"
+                    onClick={() => dispatch(decreaseQuantity(item.id))}
+                  >
+                    -
+                  </button>
+
+                  <span>{item.quantity}</span>
+
+                  <button
+                    className="px-3 py-1 bg-gray-300 rounded"
+                    onClick={() => dispatch(addToCart(item))}
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => dispatch(removeFromCart(item.id))}
+                  className="mt-4 bg-red-500 text-white py-2 rounded-full"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* TOTAL */}
+        <div className="mt-10 text-2xl font-bold">
+          TOTAL: ${total.toFixed(2)}
         </div>
       </div>
     </div>
