@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { FaStar, FaHeart } from "react-icons/fa";
 import { useFavorites } from "../context/FavoritesContext";
 import { useNavigate } from "react-router-dom";
-import type { Product } from "../data/products";
+import { useAppDispatch } from "../store/hooks";
+import { addToCart } from "../store/cartSlice";
+import type { Product } from "../types/Product";
 
 interface ProductCardProps {
   p: Product;
@@ -14,8 +16,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
   const [hover, setHover] = useState<number>(0);
   const navigate = useNavigate();
 
+  const dispatch = useAppDispatch();
+
   const handleClick = () => {
     navigate(`/product/${p.slug}`);
+  };
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    dispatch(
+      addToCart({
+        id: String(p.id),
+        name: p.name,
+        price: Number(p.price.replace("$", "")),
+        image: p.image,
+      })
+    );
   };
 
   return (
@@ -40,9 +57,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
           <FaHeart
             size={20}
             color={isFavorite(p.id) ? "#f472b6" : "#9ca3af"}
-            className={`transition-transform duration-200 ${
-              isFavorite(p.id) ? "scale-110" : "scale-100"
-            }`}
           />
         </button>
       </div>
@@ -75,12 +89,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
                       ? "#f472b6"
                       : "#4b5563"
                   }
-                  className="transition-colors duration-200"
                 />
               </button>
             );
           })}
         </div>
+
+        <button
+          onClick={handleAdd}
+          className="mt-3 px-4 py-2 bg-pink-500 text-black font-semibold rounded-lg hover:bg-pink-400 transition"
+        >
+          Add to cart
+        </button>
       </div>
     </div>
   );

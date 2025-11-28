@@ -1,7 +1,5 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "./store/store";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -29,53 +27,52 @@ import "./App.css";
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <CartProvider>
-        <FavoritesProvider>
-          <div className="min-h-screen flex flex-col bg-black text-white font-sans">
+    <CartProvider>
+      <FavoritesProvider>
+        <div className="min-h-screen flex flex-col bg-black text-white font-sans">
 
-            <Routes>
-              {/* Rutas públicas */}
-              <Route path="/" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Routes>
+            {/* RUTAS PÚBLICAS */}
+            <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
-              {/* Rutas privadas con Navbar y Footer */}
-              <Route
-                path="/*"
-                element={
-                  <>
-                    <Navbar />
+            {/* RUTAS PRIVADAS */}
+            <Route
+              path="/*"
+              element={
+                <>
+                  <Navbar />
 
-                    <main className="flex-1">
-                      <Routes>
-                        <Route path="/home" element={<Landing />} />
+                  <main className="flex-1">
+                    <Routes>
+                      <Route path="/home" element={<Landing />} />
 
-                        <Route path="/lips" element={<Lips />} />
-                        <Route path="/eyes" element={<Eyes />} />
-                        <Route path="/brows" element={<Brows />} />
-                        <Route path="/face" element={<Face />} />
-                        <Route path="/hair" element={<Hair />} />
-                        <Route path="/skincare" element={<Skincare />} />
+                      <Route path="/lips" element={<Lips />} />
+                      <Route path="/eyes" element={<Eyes />} />
+                      <Route path="/brows" element={<Brows />} />
+                      <Route path="/face" element={<Face />} />
+                      <Route path="/hair" element={<Hair />} />
+                      <Route path="/skincare" element={<Skincare />} />
 
-                        <Route path="/favorites" element={<Favorites />} />
-                        <Route path="/product/:slug" element={<ProductDetail />} />
-                        <Route path="/add-product" element={<AddProduct />} />
+                      <Route path="/favorites" element={<Favorites />} />
 
-                        {/* Default redirect */}
-                        <Route path="*" element={<Navigate to="/home" replace />} />
-                      </Routes>
-                    </main>
+                      <Route path="/product/:slug" element={<ProductDetail />} />
 
-                    <Footer />
-                  </>
-                }
-              />
-            </Routes>
+                      <Route path="/add-product" element={<AddProduct />} />
 
-          </div>
-        </FavoritesProvider>
-      </CartProvider>
-    </Provider>
+                      <Route path="*" element={<Navigate to="/home" replace />} />
+                    </Routes>
+                  </main>
+
+                  <Footer />
+                </>
+              }
+            />
+          </Routes>
+
+        </div>
+      </FavoritesProvider>
+    </CartProvider>
   );
 }
