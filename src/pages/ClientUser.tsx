@@ -1,0 +1,176 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+export default function ClientUser() {
+  const navigate = useNavigate();
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    address: "",
+    payment: "",
+  });
+
+  const [image, setImage] = useState<string | null>(null);
+
+  // Cargar info almacenada
+  useEffect(() => {
+    const saved = localStorage.getItem("user");
+    if (saved) setUser(JSON.parse(saved));
+
+    const savedImg = localStorage.getItem("userImage");
+    if (savedImg) setImage(savedImg);
+  }, []);
+
+  // Guardar cambios
+  const handleSave = () => {
+    localStorage.setItem("user", JSON.stringify(user));
+    setIsEditing(false);
+  };
+
+  // Manejo de inputs
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  // Cambio de foto
+  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImage(reader.result as string);
+      localStorage.setItem("userImage", reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="w-full bg-[#d9d9d9] text-black p-10 flex flex-col">
+
+      {/* -------------------------- USER INFO -------------------------- */}
+      <div className="flex w-full">
+
+        {/* FOTO PERFIL */}
+        <div className="w-1/2 bg-[#f06aa7] flex justify-center items-center p-10 relative">
+          <div className="w-[250px] h-[250px] bg-pink-300 rounded-full overflow-hidden">
+            {image ? (
+              <img src={image} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-white text-xl">
+                No photo
+              </div>
+            )}
+          </div>
+
+          <div className="absolute bottom-10">
+            <label className="cursor-pointer bg-pink-500 px-4 py-2 rounded-full text-white hover:bg-pink-600">
+              Upload Photo
+              <input type="file" className="hidden" onChange={handleImage} />
+            </label>
+          </div>
+        </div>
+
+        {/* INFO DEL USUARIO */}
+        <div className="w-1/2 flex flex-col p-16 space-y-6">
+          <h1 className="text-4xl font-bold tracking-widest mb-3">
+            USER INFO
+          </h1>
+
+          <input
+            name="name"
+            disabled={!isEditing}
+            value={user.name}
+            onChange={handleChange}
+            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            placeholder="name"
+          />
+
+          <input
+            name="email"
+            disabled={!isEditing}
+            value={user.email}
+            onChange={handleChange}
+            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            placeholder="email"
+          />
+
+          <input
+            name="address"
+            disabled={!isEditing}
+            value={user.address}
+            onChange={handleChange}
+            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            placeholder="add address"
+          />
+
+          <input
+            name="payment"
+            disabled={!isEditing}
+            value={user.payment}
+            onChange={handleChange}
+            className="w-[80%] px-5 py-3 rounded-full bg-white text-black disabled:bg-[#e6e6e6]"
+            placeholder="add payment"
+          />
+
+          {/* BOTÓN EDITAR / GUARDAR */}
+          {isEditing ? (
+            <button
+              onClick={handleSave}
+              className="w-[200px] mt-3 bg-purple-600 text-white py-3 rounded-full"
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="w-[200px] mt-3 bg-purple-600 text-white py-3 rounded-full"
+            >
+              Edit Profile
+            </button>
+          )}
+
+          {/* ----------------- BOTONES DE NAVEGACIÓN ----------------- */}
+          <div className="flex space-x-4 mt-5">
+            <button
+              onClick={() => navigate("/home")}
+              className="border-2 border-black px-6 py-2 rounded-full"
+            >
+              HOME
+            </button>
+
+            <button
+              onClick={() => navigate("/cart")}
+              className="border-2 border-black px-6 py-2 rounded-full"
+            >
+              CART
+            </button>
+
+            <button
+              onClick={() => navigate("/favorites")}
+              className="bg-[#ff3796] text-white px-6 py-2 rounded-full"
+            >
+              FAVORITES
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* -------------------------- ESPACIO PARA EL CARRITO -------------------------- */}
+      <div className="mt-20">
+        <h2 className="text-3xl font-bold text-black mb-8">YOUR CART</h2>
+
+        <div className="grid grid-cols-4 gap-6">
+          {/* Placeholder del carrito */}
+          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
+          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
+          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
+          <div className="bg-white h-[250px] shadow-md rounded-xl"></div>
+        </div>
+      </div>
+    </div>
+  );
+}

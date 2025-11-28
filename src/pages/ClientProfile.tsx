@@ -34,7 +34,7 @@ export default function ClientProfile() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-200 text-black">
 
-      {/* NAVBAR como en AddProduct */}
+      {/* NAVBAR*/}
       <Navbar />
 
       <div className="flex flex-col md:flex-row flex-grow">
@@ -133,7 +133,7 @@ export default function ClientProfile() {
         </div>
       </div>
 
-      {/* CARRITO VACÍO — ESPACIO RESERVADO */}
+      {/* CARRITO*/}
       <div className="px-10 py-12">
         <h2 className="text-3xl font-bold tracking-wide mb-8">YOUR CART</h2>
 
@@ -146,7 +146,7 @@ export default function ClientProfile() {
         </div>
       </div>
 
-      {/* FOOTER como en AddProduct */}
+      {/* FOOTER */}
       <Footer />
     </div>
   );
