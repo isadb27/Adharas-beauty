@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../store/hooks";
 import { addToCart } from "../store/cartSlice";
 import { useFavorites } from "../context/FavoritesContext";
-import { fetchProductBySlug } from "../api/productsApi"; // 🔥 NUEVO
+import { fetchProductBySlug } from "../api/productsApi"; 
 
 const ProductDetail: React.FC = () => {
   const { slug } = useParams();
@@ -12,14 +12,19 @@ const ProductDetail: React.FC = () => {
 
   const [product, setProduct] = useState<any>(null);
 
-  /** 🔥 Cargar producto real por slug */
+
   useEffect(() => {
-    const load = async () => {
-      const data = await fetchProductBySlug(slug!);
-      setProduct(data);
-    };
-    load();
-  }, [slug]);
+  console.log("🔍 SLUG recibido desde la URL:", slug);
+
+  const load = async () => {
+    const data = await fetchProductBySlug(slug!);
+    console.log("📦 PRODUCTO recibido:", data);
+    setProduct(data);
+  };
+
+  load();
+}, [slug]);
+
 
   if (!product) {
     return <p className="text-center py-20 text-gray-400">Cargando producto...</p>;
@@ -27,7 +32,6 @@ const ProductDetail: React.FC = () => {
 
   const isFavorite = favorites.some((f) => f.id === product.id);
 
-  /** 🔥 Agregar al carrito */
   const handleAddToCart = () => {
     dispatch(
       addToCart({
@@ -42,7 +46,7 @@ const ProductDetail: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto py-16 px-6">
       <div className="grid md:grid-cols-2 gap-10">
-        {/* 🔥 IMAGEN PRINCIPAL */}
+
         <div className="flex flex-col items-center">
           <img
             src={product.image}
@@ -50,7 +54,6 @@ const ProductDetail: React.FC = () => {
             className="rounded-2xl w-80 h-80 object-cover shadow-lg"
           />
 
-          {/* 🔥 MINI GALERÍA (si tienes más imágenes en BD) */}
           {product.images?.length > 1 && (
             <div className="flex gap-2 mt-4">
               {product.images.map((img: string, i: number) => (
@@ -64,7 +67,6 @@ const ProductDetail: React.FC = () => {
           )}
         </div>
 
-        {/* 🔥 INFO */}
         <div className="space-y-4">
           <div className="flex items-start justify-between">
             <h1 className="text-3xl font-bold">{product.name}</h1>
@@ -88,7 +90,6 @@ const ProductDetail: React.FC = () => {
             </button>
           </div>
 
-          {/* 🔥 DESCRIPCIÓN */}
           <div className="mt-8 space-y-4">
             <p className="text-gray-300">{product.description}</p>
           </div>

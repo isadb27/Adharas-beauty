@@ -1,14 +1,25 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Search, Heart, ShoppingBag, User } from "lucide-react";
 import { useFavorites } from "../context/FavoritesContext";
-import { FaUserCircle } from "react-icons/fa"; // 🆕 Nuevo icono FontAwesome
-import logofndonegro1 from "../assets/logofndonegro1.png"; 
+import { FaUserCircle } from "react-icons/fa";
+import logofndonegro1 from "../assets/logofndonegro1.png";
 
 export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
+  const [query, setQuery] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
   const { favorites } = useFavorites();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const value = query.trim().toLowerCase();
+    if (!value) return;
+
+    navigate(`/search?q=${encodeURIComponent(value)}`);
+    setShowSearch(false);
+  };
 
   const menuItems = [
     { name: "Eyes", path: "/eyes" },
@@ -21,6 +32,7 @@ export default function Navbar() {
 
   return (
     <nav className="w-full text-white font-sans">
+   
       <div className="bg-[#150010] text-sm text-center py-1">
         Hurry! Discounts You Don’t Want to Miss{" "}
         <span className="text-pink-400 underline cursor-pointer">
@@ -29,19 +41,15 @@ export default function Navbar() {
       </div>
 
       <div className="bg-black flex justify-between items-center px-6 py-3 border-b border-gray-800">
-        <div className="text-sm text-gray-300">
-          United States | English
-        </div>
+        <div className="text-sm text-gray-300">United States | English</div>
 
-        <div className="flex justify-center items-center">
-          <Link to="/landig" className="flex items-center">
-            <img
-              src={logofndonegro1}
-              alt="Adhara’s Beauty"
-              className="h-10 object-contain cursor-pointer hover:opacity-80 transition"
-            />
-          </Link>
-        </div>
+        <Link to="/home" className="flex items-center">
+          <img
+            src={logofndonegro1}
+            alt="Adhara’s Beauty"
+            className="h-10 object-contain cursor-pointer hover:opacity-80 transition"
+          />
+        </Link>
 
         <div className="flex items-center space-x-5">
           <button
@@ -60,22 +68,15 @@ export default function Navbar() {
             )}
           </Link>
 
-         <Link to="/cart" className="hover:text-pink-400 transition relative">
-  <ShoppingBag size={20} />
-</Link>
+          <Link to="/cart" className="hover:text-pink-400 transition relative">
+            <ShoppingBag size={20} />
+          </Link>
 
-
-          <Link
-            to="/profile"
-            className="hover:text-pink-400 transition text-xl"
-          >
+          <Link to="/profile" className="hover:text-pink-400 transition text-xl">
             <FaUserCircle />
           </Link>
 
-          <Link
-            to="/"
-            className="flex items-center hover:text-pink-400 transition text-sm"
-          >
+          <Link to="/login" className="flex items-center hover:text-pink-400 transition text-sm">
             <User size={18} className="mr-1" /> Sign in
           </Link>
         </div>
@@ -83,11 +84,15 @@ export default function Navbar() {
 
       {showSearch && (
         <div className="bg-black px-6 py-3 border-b border-gray-800 animate-fadeIn">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="w-full p-2 bg-gray-900 text-white rounded-md outline-none placeholder-gray-400"
-          />
+          <form onSubmit={handleSearch}>
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full p-2 bg-gray-900 text-white rounded-md outline-none placeholder-gray-400"
+            />
+          </form>
         </div>
       )}
 
@@ -103,6 +108,7 @@ export default function Navbar() {
             }`}
           >
             {item.name}
+
             {location.pathname === item.path && (
               <span className="absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-r from-pink-400 to-purple-500 rounded-full"></span>
             )}

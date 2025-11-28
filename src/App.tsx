@@ -23,6 +23,7 @@ import Favorites from "./pages/Favorites";
 import Landing from "./pages/Landig";
 import ClientUser from "./pages/ClientUser";
 import Cart from "./pages/cart";
+import SearchResults from "./pages/SearchResults"; 
 
 import "./App.css";
 
@@ -44,19 +45,15 @@ export default function App() {
       <div className="min-h-screen flex flex-col bg-black text-white font-sans">
 
         <Routes>
-          
-          {/* Redirección inicial */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
 
-          {/* TODAS ESTAS RUTAS TIENEN NAVBAR + FOOTER */}
+          <Route index element={<Navigate to="/login" replace />} />
+
           <Route path="/" element={<MainLayout />}>
-            
-            {/* Login con nav y footer */}
+
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
 
-            {/* Páginas principales */}
             <Route path="home" element={<Landing />} />
             <Route path="lips" element={<Lips />} />
             <Route path="eyes" element={<Eyes />} />
@@ -72,8 +69,10 @@ export default function App() {
             <Route path="add-product" element={<AddProduct />} />
             <Route path="profile" element={<ClientUser />} />
 
-            {/* fallback */}
+            <Route path="search" element={<SearchResults />} />
+
             <Route path="*" element={<Navigate to="/login" replace />} />
+
           </Route>
 
         </Routes>

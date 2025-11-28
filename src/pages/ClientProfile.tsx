@@ -35,12 +35,10 @@ export default function ClientProfile() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-200 text-black">
 
-      {/* NAVBAR */}
       <Navbar />
 
       <div className="flex flex-col md:flex-row flex-grow">
 
-        {/* FOTO */}
         <div className="md:w-1/2 bg-pink-400 flex flex-col items-center justify-center p-10">
           {user.image ? (
             <img
@@ -70,7 +68,6 @@ export default function ClientProfile() {
           />
         </div>
 
-        {/* INFO */}
         <div className="md:w-1/2 p-10 flex flex-col">
           <h2 className="text-4xl font-bold tracking-wide mb-6">USER INFO</h2>
 
@@ -134,7 +131,6 @@ export default function ClientProfile() {
         </div>
       </div>
 
-      {/* CARRITO EN PERFIL */}
       <div className="px-10 py-12">
         <h2 className="text-3xl font-bold tracking-wide mb-8">YOUR CART</h2>
 
@@ -165,7 +161,6 @@ export default function ClientProfile() {
         </div>
       </div>
 
-      {/* FOOTER */}
       <Footer />
     </div>
   );

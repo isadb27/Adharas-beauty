@@ -11,11 +11,9 @@ export default function ClientUser() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  // Traer carrito real desde Redux
   const cartItems = useAppSelector((state) => state.cart.items);
   const total = cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-  // Manejo de perfil local 
   const [isEditing, setIsEditing] = useState(false);
 
   const [user, setUser] = useState({
@@ -62,10 +60,8 @@ export default function ClientUser() {
   return (
     <div className="w-full bg-[#d9d9d9] text-black p-10 flex flex-col">
 
-      {/* --------------------- USER INFO --------------------- */}
       <div className="flex w-full">
 
-        {/* FOTO */}
         <div className="w-1/2 bg-[#f06aa7] flex flex-col items-center justify-center p-10 relative">
           <div className="w-[250px] h-[250px] bg-pink-300 rounded-full overflow-hidden">
             {image ? (
@@ -87,7 +83,6 @@ export default function ClientUser() {
           <input type="file" ref={fileInput} className="hidden" onChange={handleImage} />
         </div>
 
-        {/* DATOS */}
         <div className="w-1/2 flex flex-col p-16 space-y-6">
           <h1 className="text-4xl font-bold tracking-widest mb-3">USER INFO</h1>
 
@@ -143,7 +138,6 @@ export default function ClientUser() {
             </button>
           )}
 
-          {/* BOTONES */}
           <div className="flex space-x-4 mt-5">
             <button
               onClick={() => navigate("/home")}
@@ -169,7 +163,6 @@ export default function ClientUser() {
         </div>
       </div>
 
-      {/* --------------------- CARRITO --------------------- */}
       <div className="mt-20">
         <h2 className="text-3xl font-bold text-black mb-8">YOUR CART</h2>
 
@@ -214,7 +207,6 @@ export default function ClientUser() {
           </div>
         )}
 
-        {/* TOTAL */}
         <div className="mt-10 text-2xl font-bold">
           TOTAL: ${total.toFixed(2)}
         </div>
