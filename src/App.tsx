@@ -1,13 +1,12 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
-import { FavoritesProvider } from "./context/FavoritesContext";
-
 import AddProduct from "./pages/AddProduct";
 import ProductDetail from "./pages/ProductDetail";
+import { FavoritesProvider } from "./context/FavoritesContext";
 
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
@@ -27,50 +26,56 @@ import Cart from "./pages/cart";
 
 import "./App.css";
 
+function MainLayout() {
+  return (
+    <div className="flex flex-col min-h-screen bg-black text-white">
+      <Navbar />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <FavoritesProvider>
       <div className="min-h-screen flex flex-col bg-black text-white font-sans">
 
         <Routes>
- 
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          
+          {/* Redirección inicial */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
-          <Route
-            path="/*"
-            element={
-              <div className="flex flex-col min-h-screen">
-                <Navbar />
+          {/* TODAS ESTAS RUTAS TIENEN NAVBAR + FOOTER */}
+          <Route path="/" element={<MainLayout />}>
+            
+            {/* Login con nav y footer */}
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
 
-                <main className="flex-1">
-                  <Routes>
-                    <Route path="home" element={<Landing />} />
+            {/* Páginas principales */}
+            <Route path="home" element={<Landing />} />
+            <Route path="lips" element={<Lips />} />
+            <Route path="eyes" element={<Eyes />} />
+            <Route path="brows" element={<Brows />} />
+            <Route path="face" element={<Face />} />
+            <Route path="hair" element={<Hair />} />
+            <Route path="skincare" element={<Skincare />} />
 
-                    <Route path="lips" element={<Lips />} />
-                    <Route path="eyes" element={<Eyes />} />
-                    <Route path="brows" element={<Brows />} />
-                    <Route path="face" element={<Face />} />
-                    <Route path="hair" element={<Hair />} />
-                    <Route path="skincare" element={<Skincare />} />
+            <Route path="favorites" element={<Favorites />} />
+            <Route path="product/:slug" element={<ProductDetail />} />
 
-                    <Route path="favorites" element={<Favorites />} />
-                    <Route path="product/:slug" element={<ProductDetail />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="add-product" element={<AddProduct />} />
+            <Route path="profile" element={<ClientUser />} />
 
-                    <Route path="cart" element={<Cart />} />
+            {/* fallback */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Route>
 
-                    <Route path="add-product" element={<AddProduct />} />
-                    <Route path="profile" element={<ClientUser />} />
-
-                    <Route path="*" element={<Navigate to="/home" replace />} />
-                  </Routes>
-                </main>
-
-                <Footer />
-              </div>
-            }
-          />
         </Routes>
 
       </div>

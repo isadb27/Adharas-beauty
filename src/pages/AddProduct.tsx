@@ -148,7 +148,7 @@ export default function AddProduct() {
         </div>
       </div>
 
-      <Footer />
+
     </div>
   );
 }

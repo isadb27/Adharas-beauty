@@ -8,16 +8,11 @@ import { store } from "./store/store";
 
 import { BrowserRouter } from "react-router-dom";
 
-// ⬅️ IMPORTANTE: AGREGAR ESTO
-import { CartProvider } from "./context/CartContext";
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <CartProvider>   {/* ⬅️ NECESARIO PARA QUE useCart NO ROMPA */}
-          <App />
-        </CartProvider>
+        <App />
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

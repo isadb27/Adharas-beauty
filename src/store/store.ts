@@ -7,11 +7,11 @@ import authReducer from "./authSlice";
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
-    products: productsReducer,
-    product: productReducer,
-    cart: cartReducer,
-    auth: authReducer,
+    user: userReducer,       
+    products: productsReducer, 
+    product: productReducer,   
+    cart: cartReducer,         
+    auth: authReducer,        
   },
 });
 
