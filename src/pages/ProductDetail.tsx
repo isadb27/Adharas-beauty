@@ -1,87 +1,66 @@
-import React from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { useAppDispatch } from "../store/hooks";
-import { addToCart } from "../store/cartSlice";
-import { useFavorites } from "../context/FavoritesContext";
+import { useSelector, useDispatch } from "react-redux";
+import { loadProductsByCategory } from "../store/productsSlice";
+import type { RootState, AppDispatch } from "../store/store";
 
-const ProductDetail: React.FC = () => {
+export default function ProductDetail() {
   const { slug } = useParams();
-  const dispatch = useAppDispatch();
-  const { favorites, toggleFavorite } = useFavorites();
+  const dispatch = useDispatch<AppDispatch>();
 
-  // Buscar producto por ID
- const product = useSelector((state: RootState) => {
-  console.log("🔍 SLUG DE LA URL:", slug);
-  console.log("📦 Productos en Redux:", state.products.products);
+  const { products, loading } = useSelector(
+    (state: RootState) => state.products
+  );
 
-  return state.products.products.find((p) => String(p.id) === slug);
-});
+  useEffect(() => {
+    if (products.length === 0) {
+      dispatch(loadProductsByCategory("all"));
+    }
+  }, [dispatch, products.length]);
 
-  if (!product) {
-    return (
-      <p className="text-center py-20 text-gray-400">
-        Producto no encontrado.
-      </p>
-    );
+  const product = products.find((p) => String(p.id) === String(slug));
+
+  if (loading && products.length === 0) {
+    return <div className="text-white p-10">Cargando producto...</div>;
   }
 
-  const isFavorite = favorites.some((f) => f.id === product.id);
-
-  const handleAddToCart = () => {
-    dispatch(
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: Number(product.price),
-        image: product.image, // ← CORREGIDO
-      })
-    );
-  };
+  if (!product) {
+    console.log("Producto no encontrado:", slug, products);
+    return <div className="text-red-500 p-10">Producto no encontrado</div>;
+  }
 
   return (
-    <div className="max-w-6xl mx-auto py-16 px-6">
-      <div className="grid md:grid-cols-2 gap-10">
-        
-        <div className="flex flex-col items-center">
-          <img
-            src={product.image} // ← CORREGIDO
-            alt={product.name}
-            className="rounded-2xl w-80 h-80 object-cover shadow-lg"
-          />
-        </div>
+    <div className="text-white px-8 py-16 flex flex-col md:flex-row justify-center items-start gap-16">
 
-        <div className="space-y-4">
-          <div className="flex items-start justify-between">
-            <h1 className="text-3xl font-bold">{product.name}</h1>
+      {/* -------- IMAGEN GRANDE -------- */}
+      <img
+        src={product.main_imagen_url ?? ""}
+        alt={product.name}
+        className="rounded-2xl w-[420px] h-auto object-cover border border-neutral-800 shadow-lg"
+      />
 
-            <button
-              onClick={() => toggleFavorite(product)}
-              className="text-2xl text-pink-500 hover:scale-110 transition-transform"
-            >
-              {isFavorite ? "❤️" : "🤍"}
-            </button>
-          </div>
+      {/* -------- INFO -------- */}
+      <div className="flex flex-col gap-6 max-w-xl">
 
-          <p className="text-lg text-gray-300">${product.price}</p>
+        <h1 className="text-4xl font-bold leading-tight">
+          {product.name}
+        </h1>
 
-          <div className="mt-8 flex gap-4">
-            <button
-              onClick={handleAddToCart}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-3 rounded-full transition-all shadow-md"
-            >
-              🛒 Añadir al carrito
-            </button>
-          </div>
+        <p className="text-2xl text-gray-300">
+          ${Number(product.price)}
+        </p>
 
-          <div className="mt-8 space-y-4">
-            <p className="text-gray-300">{product.description}</p>
-          </div>
-        </div>
+        <button
+          className="px-10 py-3 bg-pink-500 hover:bg-pink-600 text-black font-semibold rounded-lg transition w-fit"
+        >
+          Add to Cart
+        </button>
+
+        <p className="text-gray-300 leading-relaxed text-lg">
+          {product.description}
+        </p>
       </div>
+
     </div>
   );
-};
-
-export default ProductDetail;
+}

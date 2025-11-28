@@ -1,8 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { fetchProductsByCategory } from "../api/productsApi";
+import type { Product } from "../types/Product";
 
 interface ProductsState {
-  products: any[];
+  products: Product[];
   loading: boolean;
   error: string | null;
 }
@@ -21,10 +22,14 @@ export const loadProductsByCategory = createAsyncThunk(
   }
 );
 
-export const productsSlice = createSlice({
+const productsSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    addProduct: (state, action: PayloadAction<Product>) => {
+      state.products.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadProductsByCategory.pending, (state) => {
@@ -41,4 +46,5 @@ export const productsSlice = createSlice({
   },
 });
 
+export const { addProduct } = productsSlice.actions;
 export default productsSlice.reducer;

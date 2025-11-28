@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { FaStar, FaHeart } from "react-icons/fa";
 import { useFavorites } from "../context/FavoritesContext";
@@ -12,95 +11,87 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
-  const { toggleFavorite, isFavorite } = useFavorites();
-  const [rating, setRating] = useState<number>(0);
-  const [hover, setHover] = useState<number>(0);
-  const navigate = useNavigate();
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { favorites, toggleFavorite } = useFavorites();
 
-  const handleClick = () => {
-    navigate(`/product/${p.id}`);
-  };
+  const isFavorite = favorites.some((item) => item.id === p.id);
 
-  const handleAdd = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const imageUrl =
+    p.main_imagen_url ||
+    p.image ||
+    "https://via.placeholder.com/300?text=No+Image";
 
+  const handleAddToCart = () => {
     dispatch(
       addToCart({
-        id: String(p.id),
+        id: p.id,
         name: p.name,
         price: Number(p.price),
-        image: p.image,
+        image: imageUrl,
       })
     );
   };
 
   return (
-    <div
-      onClick={handleClick}
-      className="bg-black border border-gray-800 rounded-2xl shadow-md overflow-hidden transition duration-300 hover:shadow-pink-500/30 hover:-translate-y-1 w-64 cursor-pointer"
-    >
-      <div className="relative">
-        <img
-          src={p.image} 
-          alt={p.name}
-          className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
+    <div className="rounded-xl shadow-md p-4 bg-black text-white relative">
+
+      <button
+        onClick={() => toggleFavorite(p)}
+        className="absolute top-3 right-3"
+      >
+        <FaHeart
+          color={isFavorite ? "#ff4b91" : "lightgray"}
+          size={22}
         />
+      </button>
 
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleFavorite(p);
-          }}
-          className="absolute top-3 right-3 text-gray-400 hover:text-pink-500 transition"
-        >
-          <FaHeart
+      <img
+        src={imageUrl}
+        alt={p.name}
+        className="w-full h-48 object-cover rounded-lg cursor-pointer"
+        onClick={() => navigate(`/product/${p.id}`)}
+      />
+
+      <h3
+        className="mt-3 text-lg font-semibold cursor-pointer"
+        onClick={() => navigate(`/product/${p.id}`)}
+      >
+        {p.name}
+      </h3>
+
+      <p className="text-pink-400 font-bold">
+        ${Number(p.price)}
+      </p>
+
+      {/* ⭐ CENTRADAS */}
+      <div className="flex mt-2 justify-center">
+        {[1, 2, 3, 4, 5].map((value) => (
+          <FaStar
+            key={value}
             size={20}
-            color={isFavorite(p.id) ? "#f472b6" : "#9ca3af"}
+            onClick={() => setRating(value)}
+            onMouseEnter={() => setHover(value)}
+            onMouseLeave={() => setHover(0)}
+            color={
+              (hover || rating) >= value
+                ? "#ff7eb9"
+                : "lightgray"
+            }
+            className="cursor-pointer"
           />
-        </button>
+        ))}
       </div>
 
-      <div className="p-4 text-center">
-        <h3 className="text-white text-lg font-semibold tracking-wide mb-1">
-          {p.name}
-        </h3>
-        <p className="text-pink-400 text-sm font-medium mb-3">${p.price}</p>
-
-        <div className="flex justify-center gap-1">
-          {[...Array(5)].map((_, index) => {
-            const ratingValue = index + 1;
-            return (
-              <button
-                key={index}
-                type="button"
-                className="focus:outline-none"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setRating(ratingValue);
-                }}
-                onMouseEnter={() => setHover(ratingValue)}
-                onMouseLeave={() => setHover(0)}
-              >
-                <FaStar
-                  size={18}
-                  color={
-                    ratingValue <= (hover || rating) ? "#f472b6" : "#4b5563"
-                  }
-                />
-              </button>
-            );
-          })}
-        </div>
-
-        <button
-          onClick={handleAdd}
-          className="mt-3 px-4 py-2 bg-pink-500 text-black font-semibold rounded-lg hover:bg-pink-400 transition"
-        >
-          Add to cart
-        </button>
-      </div>
+      <button
+        onClick={handleAddToCart}
+        className="mt-3 w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600"
+      >
+        Añadir al carrito
+      </button>
     </div>
   );
 };
