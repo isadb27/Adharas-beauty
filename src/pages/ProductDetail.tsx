@@ -1,33 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 import { useAppDispatch } from "../store/hooks";
 import { addToCart } from "../store/cartSlice";
 import { useFavorites } from "../context/FavoritesContext";
-import { fetchProductBySlug } from "../api/productsApi"; 
 
 const ProductDetail: React.FC = () => {
   const { slug } = useParams();
   const dispatch = useAppDispatch();
   const { favorites, toggleFavorite } = useFavorites();
 
-  const [product, setProduct] = useState<any>(null);
+  // Buscar producto por ID
+ const product = useSelector((state: RootState) => {
+  console.log("🔍 SLUG DE LA URL:", slug);
+  console.log("📦 Productos en Redux:", state.products.products);
 
-
-  useEffect(() => {
-  console.log("🔍 SLUG recibido desde la URL:", slug);
-
-  const load = async () => {
-    const data = await fetchProductBySlug(slug!);
-    console.log("📦 PRODUCTO recibido:", data);
-    setProduct(data);
-  };
-
-  load();
-}, [slug]);
-
+  return state.products.products.find((p) => String(p.id) === slug);
+});
 
   if (!product) {
-    return <p className="text-center py-20 text-gray-400">Cargando producto...</p>;
+    return (
+      <p className="text-center py-20 text-gray-400">
+        Producto no encontrado.
+      </p>
+    );
   }
 
   const isFavorite = favorites.some((f) => f.id === product.id);
@@ -35,10 +32,10 @@ const ProductDetail: React.FC = () => {
   const handleAddToCart = () => {
     dispatch(
       addToCart({
-        id: String(product.id),
+        id: product.id,
         name: product.name,
         price: Number(product.price),
-        image: product.image,
+        image: product.image, // ← CORREGIDO
       })
     );
   };
@@ -46,25 +43,13 @@ const ProductDetail: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto py-16 px-6">
       <div className="grid md:grid-cols-2 gap-10">
-
+        
         <div className="flex flex-col items-center">
           <img
-            src={product.image}
+            src={product.image} // ← CORREGIDO
             alt={product.name}
             className="rounded-2xl w-80 h-80 object-cover shadow-lg"
           />
-
-          {product.images?.length > 1 && (
-            <div className="flex gap-2 mt-4">
-              {product.images.map((img: string, i: number) => (
-                <img
-                  key={i}
-                  src={img}
-                  className="w-16 h-16 rounded-xl object-cover cursor-pointer hover:opacity-80"
-                />
-              ))}
-            </div>
-          )}
         </div>
 
         <div className="space-y-4">

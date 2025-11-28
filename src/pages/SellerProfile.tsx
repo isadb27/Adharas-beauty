@@ -34,28 +34,28 @@ export default function SellerProfile() {
     const reader = new FileReader();
     reader.onloadend = () => {
       setImage(reader.result as string);
-      dispatch(updateUserImage(reader.result as string)); // guarda en Redux
+      dispatch(updateUserImage(reader.result as string)); 
     };
     reader.readAsDataURL(file);
   };
 
   const handleSave = () => {
-    // Si quieres, puedes agregar acción para guardar cambios en Redux o backend
+   
     setIsEditing(false);
   };
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    navigate("/"); // redirige al inicio
+    navigate("/"); 
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-200 text-black p-10">
 
-      {/* PERFIL */}
+     
       <div className="flex flex-col md:flex-row flex-grow">
 
-        {/* FOTO */}
+   
         <div className="md:w-1/2 bg-pink-400 flex flex-col items-center justify-center p-10">
           <div className="w-64 h-64 rounded-full overflow-hidden shadow-lg">
             {image ? (
@@ -83,7 +83,6 @@ export default function SellerProfile() {
           />
         </div>
 
-        {/* INFO */}
         <div className="md:w-1/2 p-10 flex flex-col">
           <h2 className="text-4xl font-bold tracking-wide mb-6">SELLER INFO</h2>
 
@@ -112,7 +111,6 @@ export default function SellerProfile() {
             />
           </div>
 
-          {/* Botones de acción */}
           <div className="flex space-x-4 mt-8">
             {isEditing ? (
               <button
@@ -156,7 +154,6 @@ export default function SellerProfile() {
         </div>
       </div>
 
-      {/* PRODUCTS */}
       <div className="mt-12">
         <h2 className="text-3xl font-bold text-black mb-8">YOUR PRODUCTS</h2>
 

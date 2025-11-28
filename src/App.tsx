@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -24,10 +24,10 @@ import Favorites from "./pages/Favorites";
 import Landing from "./pages/Landig";
 
 import ClientUser from "./pages/ClientUser";
-import SellerProfile from "./pages/SellerProfile"; // NUEVO PERFIL VENDEDOR
+import SellerProfile from "./pages/SellerProfile"; 
 
 import Cart from "./pages/cart";
-import SearchResults from "./pages/SearchResults"; 
+import SearchResults from "./pages/SearchResults";
 
 import "./App.css";
 
@@ -36,7 +36,27 @@ function MainLayout() {
     <div className="flex flex-col min-h-screen bg-black text-white">
       <Navbar />
       <main className="flex-1">
-        <Outlet />
+        <Routes>
+          <Route path="home" element={<Landing />} />
+          <Route path="lips" element={<Lips />} />
+          <Route path="eyes" element={<Eyes />} />
+          <Route path="brows" element={<Brows />} />
+          <Route path="face" element={<Face />} />
+          <Route path="hair" element={<Hair />} />
+          <Route path="skincare" element={<Skincare />} />
+
+          <Route path="favorites" element={<Favorites />} />
+          <Route path="product/:slug" element={<ProductDetail />} />
+
+          <Route path="cart" element={<Cart />} />
+          <Route path="add-product" element={<AddProduct />} />
+
+          <Route path="profile" element={<ClientUser />} />
+          <Route path="search" element={<SearchResults />} />
+          <Route path="seller-profile" element={<SellerProfile />} />
+
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
       </main>
       <Footer />
     </div>
@@ -49,59 +69,16 @@ export default function App() {
       <div className="min-h-screen flex flex-col bg-black text-white font-sans">
 
         <Routes>
-<<<<<<< HEAD
-
+     
           <Route index element={<Navigate to="/login" replace />} />
 
-          <Route path="/" element={<MainLayout />}>
-
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<Signup />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-=======
-
-          {/* REDIRECCIÓN INICIAL */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
-
-          {/* LOGIN / SIGNUP / FORGOT SIN NAVBAR Y SIN FOOTER */}
+          
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          {/* TODO LO DEMÁS CON NAVBAR + FOOTER */}
-          <Route path="/" element={<MainLayout />}>
->>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
-
-            <Route path="home" element={<Landing />} />
-            <Route path="lips" element={<Lips />} />
-            <Route path="eyes" element={<Eyes />} />
-            <Route path="brows" element={<Brows />} />
-            <Route path="face" element={<Face />} />
-            <Route path="hair" element={<Hair />} />
-            <Route path="skincare" element={<Skincare />} />
-
-            <Route path="favorites" element={<Favorites />} />
-            <Route path="product/:slug" element={<ProductDetail />} />
-
-            <Route path="cart" element={<Cart />} />
-            <Route path="add-product" element={<AddProduct />} />
-
-            {/* PERFIL CLIENTE */}
-            <Route path="profile" element={<ClientUser />} />
-
-<<<<<<< HEAD
-            <Route path="search" element={<SearchResults />} />
-
-=======
-            {/* PERFIL VENDEDOR*/}
-            <Route path="seller-profile" element={<SellerProfile />} />
-
-            {/* Fallback */}
->>>>>>> 6148158266bd866db067e32060ddd1dd0d0f2069
-            <Route path="*" element={<Navigate to="/login" replace />} />
-
-          </Route>
-
+        
+          <Route path="/*" element={<MainLayout />} />
         </Routes>
 
       </div>

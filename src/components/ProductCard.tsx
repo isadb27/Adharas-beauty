@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { FaStar, FaHeart } from "react-icons/fa";
 import { useFavorites } from "../context/FavoritesContext";
@@ -19,7 +20,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
   const dispatch = useAppDispatch();
 
   const handleClick = () => {
-    navigate(`/product/${p.slug}`);
+    navigate(`/product/${p.id}`);
   };
 
   const handleAdd = (e: React.MouseEvent) => {
@@ -29,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
       addToCart({
         id: String(p.id),
         name: p.name,
-        price: Number(p.price.replace("$", "")),
+        price: Number(p.price),
         image: p.image,
       })
     );
@@ -42,7 +43,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
     >
       <div className="relative">
         <img
-          src={p.image}
+          src={p.image} 
           alt={p.name}
           className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
         />
@@ -65,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
         <h3 className="text-white text-lg font-semibold tracking-wide mb-1">
           {p.name}
         </h3>
-        <p className="text-pink-400 text-sm font-medium mb-3">{p.price}</p>
+        <p className="text-pink-400 text-sm font-medium mb-3">${p.price}</p>
 
         <div className="flex justify-center gap-1">
           {[...Array(5)].map((_, index) => {
@@ -85,9 +86,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ p }) => {
                 <FaStar
                   size={18}
                   color={
-                    ratingValue <= (hover || rating)
-                      ? "#f472b6"
-                      : "#4b5563"
+                    ratingValue <= (hover || rating) ? "#f472b6" : "#4b5563"
                   }
                 />
               </button>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct } from "../store/productSlice";
+
 import { AppDispatch, RootState } from "../store/store";
 
 export default function AddProduct() {
@@ -10,12 +10,11 @@ export default function AddProduct() {
 
   const user = useSelector((state: RootState) => state.auth.user);
 
-  // ⛔ Evitar que un cliente o no logueado acceda
   useEffect(() => {
     if (!user) {
-      navigate("/"); // no logueado → login
+      navigate("/");
     } else if (user.role !== "seller") {
-      navigate("/profile"); // cliente → perfil normal
+      navigate("/profile");
     }
   }, [user, navigate]);
 
@@ -38,10 +37,10 @@ export default function AddProduct() {
       price,
       details,
       image,
-      sellerEmail: user?.email, // 🔥 Asignar vendedor al producto
+      sellerEmail: user?.email,
     };
 
-    dispatch(addProduct(newProduct));
+    console.log("🆕 Producto creado (pero aún NO enviado a Supabase)", newProduct);
 
     alert("Producto agregado correctamente 💖");
 
@@ -63,7 +62,6 @@ export default function AddProduct() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <div className="flex flex-col md:flex-row flex-grow">
-        {/* IMAGEN DEL PRODUCTO */}
         <div className="md:w-1/2 flex items-center justify-center bg-pink-300 relative">
           {image ? (
             <>
@@ -95,7 +93,6 @@ export default function AddProduct() {
           )}
         </div>
 
-        {/* FORMULARIO */}
         <div className="md:w-1/2 flex flex-col justify-center items-center p-8 bg-gray-200">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 tracking-wide">
             PRODUCT INFO

@@ -1,33 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ProductCard from "../components/ProductCard";
-import { fetchProductsByCategory } from "../api/productsApi";
-import type { Product } from "../types/Product";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { loadProductsByCategory } from "../store/productsSlice";
 
 const Eyes = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const { products, loading, error } = useAppSelector((state) => state.products);
 
   useEffect(() => {
-    let mounted = true;
-
-    async function load() {
-      setLoading(true);
-      setError(null);
-
-      const data = await fetchProductsByCategory("eyes");
-      console.log("📦 Productos recibidos en frontend:", data);
-
-      if (mounted) setProducts(data);
-      setLoading(false);
-    }
-
-    load();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    dispatch(loadProductsByCategory("eyes"));
+  }, [dispatch]);
 
   if (loading) {
     return (
